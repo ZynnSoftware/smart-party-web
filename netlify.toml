@@ -1,0 +1,19 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Proxy API calls to the Heroku backend. Because it's a same-origin rewrite
+# (status 200), the browser never makes a cross-origin request — no CORS needed.
+# This block MUST come before the SPA fallback below, or /api would be swallowed.
+[[redirects]]
+  from = "/api/*"
+  to = "https://smart-party-api-c88a82569564.herokuapp.com/:splat"
+  status = 200
+  force = true
+
+# SPA fallback: every other route serves index.html so react-router handles it
+# (otherwise a refresh on /events/:id would 404).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

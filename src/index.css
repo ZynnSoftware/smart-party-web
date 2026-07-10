@@ -1,0 +1,145 @@
+@import 'tailwindcss';
+
+/* Social Hearth design system — see prototype social_hearth/DESIGN.md */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --color-surface: #f8f9fa;
+  --color-surface-container: #edeeef;
+  --color-surface-container-low: #f3f4f5;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #e7e8e9;
+  --color-on-surface: #191c1d;
+  --color-on-surface-variant: #5a413b;
+  --color-outline: #8e706a;
+  --color-outline-variant: #e3beb7;
+
+  --color-primary: #b3290f;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #ff5f40;
+  --color-primary-fixed: #ffdad3;
+
+  --color-secondary: #5f5e5e;
+  --color-on-secondary: #ffffff;
+
+  --color-tertiary: #006d36;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #00ab58;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+
+  --color-background: #f8f9fa;
+  --color-on-background: #191c1d;
+
+  --radius-sm: 0.375rem;
+  --radius: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+
+  --shadow-card: 0px 8px 24px rgba(0, 0, 0, 0.04), 0px 2px 8px rgba(0, 0, 0, 0.02);
+  --shadow-floating: 0px 16px 48px rgba(0, 0, 0, 0.08), 0px 4px 16px rgba(0, 0, 0, 0.04);
+
+  --animate-pop-in: pop-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-fade-in: fade-in 0.4s ease-out;
+  --animate-rise: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-page-enter: page-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Dark theme — applied by ThemeProvider via data-theme on <html>. */
+:root[data-theme='dark'] {
+  --color-surface: #191c1d;
+  --color-surface-container: #201f1f;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-container-lowest: #131313;
+  --color-surface-container-high: #2b2a2a;
+  --color-on-surface: #e6e1e0;
+  --color-on-surface-variant: #d8c2bd;
+  --color-outline: #a08c87;
+  --color-outline-variant: #534340;
+
+  --color-primary: #ffb4a5;
+  --color-on-primary: #5f1500;
+  --color-primary-container: #c8402a;
+  --color-primary-fixed: #5c1600;
+
+  --color-secondary: #c8c6c6;
+  --color-on-secondary: #303030;
+
+  --color-tertiary: #4de082;
+  --color-on-tertiary: #003517;
+  --color-tertiary-container: #00753b;
+
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+
+  --color-background: #131516;
+  --color-on-background: #e6e1e0;
+
+  --shadow-card: 0px 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-floating: 0px 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes pop-in {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes page-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+html {
+  color-scheme: light;
+}
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-sans);
+  margin: 0;
+  min-height: 100vh;
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
+  -webkit-font-smoothing: antialiased;
+}
