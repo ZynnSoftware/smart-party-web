@@ -2,6 +2,11 @@
   command = "npm run build"
   publish = "dist"
 
+# Vite 8 requires Node >= 20.19 / 22.12; pin it so Netlify doesn't fall back to
+# an older default and fail the build.
+[build.environment]
+  NODE_VERSION = "22"
+
 # Proxy API calls to the Heroku backend. Because it's a same-origin rewrite
 # (status 200), the browser never makes a cross-origin request — no CORS needed.
 # This block MUST come before the SPA fallback below, or /api would be swallowed.

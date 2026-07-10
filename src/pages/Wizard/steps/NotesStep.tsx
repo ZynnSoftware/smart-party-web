@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
-import { Card } from '@/components/ui/Card'
 import { Stepper } from '@/components/Stepper'
 import { useWizard } from '@/contexts/WizardContext'
 

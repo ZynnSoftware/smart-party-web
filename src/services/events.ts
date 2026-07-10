@@ -18,6 +18,8 @@ export type UpdateEventPayload = Partial<
     | 'restrictions'
     | 'appetite'
     | 'itemOverrides'
+    | 'extraItems'
+    | 'notes'
     | 'budgetCap'
     | 'splitMethod'
     | 'pixKey'

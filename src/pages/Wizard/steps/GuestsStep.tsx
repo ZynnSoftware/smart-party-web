@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
-import { Card } from '@/components/ui/Card'
 import { Counter } from '@/components/ui/Counter'
 import { Icon, type IconName } from '@/components/ui/Icon'
 import { Stepper } from '@/components/Stepper'

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
-import type { ReactNode } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
-import { Card } from '@/components/ui/Card'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Icon } from '@/components/ui/Icon'
 import { SkeletonList } from '@/components/ui/Skeleton'
@@ -37,30 +35,6 @@ function seedPayers(event: Event): Payer[] {
   }
 
   return payers
-}
-
-function MethodButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean
-  onClick: () => void
-  children: ReactNode
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex-1 cursor-pointer rounded px-4 py-2 text-sm font-semibold transition ${
-        active
-          ? 'bg-primary text-on-primary'
-          : 'bg-surface-container text-on-surface'
-      }`}
-    >
-      {children}
-    </button>
-  )
 }
 
 export function SplitStep() {

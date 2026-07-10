@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Card } from '@/components/ui/Card'
 import { Counter } from '@/components/ui/Counter'
 import { Icon } from '@/components/ui/Icon'
 import { formatBRL, formatQuantity } from '@/utils/money'
@@ -84,7 +83,7 @@ export function ItemList({
   )
 }
 
-function CategoryGroup({ category, catItems, meta, showCuts, guestCount, setOverride, forceExpand }: any) {
+function CategoryGroup({ catItems, meta, showCuts, guestCount, setOverride, forceExpand }: any) {
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
@@ -230,7 +229,7 @@ export function RemovedItems({
           </div>
         </div>
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-highest/50 text-on-surface-variant transition-transform duration-300" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-          <Icon name="keyboard-arrow-down" size={20} />
+          <Icon name="chevron-down" size={20} />
         </div>
       </button>
       
