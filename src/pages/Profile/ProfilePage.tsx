@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useUser, SignOutButton } from '@clerk/clerk-react'
 import { TopBar } from '@/components/TopBar'
 import { Icon } from '@/components/ui/Icon'
@@ -10,9 +9,6 @@ import { formatBRL } from '@/utils/money'
 import { useToast } from '@/contexts/ToastContext'
 import { useTheme } from '@/contexts/ThemeContext'
 import { SubscriptionModal } from '@/components/SubscriptionModal'
-
-import { useClerk } from '@clerk/clerk-react'
-
 export function ProfilePage() {
   const { user } = useUser()
   const { events, isLoading } = useEvents()
