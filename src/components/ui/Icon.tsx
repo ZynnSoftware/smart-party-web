@@ -24,6 +24,8 @@ export type IconName =
   | 'flag'
   | 'edit'
   | 'chevron-down'
+  | 'lock'
+  | 'pencil'
 
 interface IconProps extends SVGProps<SVGSVGElement> {
   name: IconName
@@ -64,6 +66,8 @@ const PATHS: Record<IconName, string> = {
   flag: 'M5 21V4M5 4h11l-2 4 2 4H5',
   edit: 'M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z',
   'chevron-down': 'M6 9l6 6 6-6',
+  lock: 'M7 11V7a5 5 0 0 1 10 0v4M5 11h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z',
+  pencil: 'M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z',
 }
 
 const FILLED: Partial<Record<IconName, boolean>> = {

@@ -2,6 +2,22 @@ import '@testing-library/jest-dom/vitest'
 import { afterAll, afterEach, beforeAll, vi } from 'vitest'
 import { server } from './mocks/server'
 
+// Treat every test as a signed-in user so Clerk-dependent UI (TopBar, gates)
+// renders without a real Clerk context.
+vi.mock('@clerk/clerk-react', () => ({
+  useAuth: () => ({
+    isLoaded: true,
+    isSignedIn: true,
+    getToken: async () => 'test-token',
+  }),
+  ClerkProvider: ({ children }: { children?: unknown }) => children,
+  SignedIn: ({ children }: { children?: unknown }) => children,
+  SignedOut: () => null,
+  UserButton: () => null,
+  SignInButton: ({ children }: { children?: unknown }) => children,
+  SignUpButton: ({ children }: { children?: unknown }) => children,
+}))
+
 // jsdom does not implement matchMedia — ThemeProvider relies on it.
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

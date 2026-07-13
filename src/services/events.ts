@@ -63,6 +63,16 @@ async function finalize(id: string): Promise<Event> {
   return data
 }
 
+async function toggleChecklist(id: string, itemId: string): Promise<Event> {
+  const { data } = await api.patch<Event>(`/events/${id}/checklist`, { itemId })
+  return data
+}
+
+async function togglePayment(id: string, payerName: string): Promise<Event> {
+  const { data } = await api.patch<Event>(`/events/${id}/payments`, { payerName })
+  return data
+}
+
 export const eventsService = {
   create,
   update,
@@ -71,4 +81,6 @@ export const eventsService = {
   list,
   remove,
   finalize,
+  toggleChecklist,
+  togglePayment,
 }

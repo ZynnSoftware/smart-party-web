@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TopBar } from '@/components/TopBar'
 import { EmptyState } from '@/components/EmptyState'
@@ -13,6 +13,8 @@ import { moodImage, moodLabel } from '@/utils/moods'
 import { activeRestrictionLabels } from '@/utils/restrictions'
 import { eventStage } from '@/utils/eventStage'
 import type { EventSummary } from '@/types/domain'
+import { getUserProfile } from '@/services/auth'
+import { SubscriptionModal } from '@/components/SubscriptionModal'
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('pt-BR', {
@@ -26,7 +28,20 @@ export function EventsListPage() {
   const navigate = useNavigate()
   const { events, isLoading, error, removeEvent } = useEvents()
   const { showToast } = useToast()
+  
   const [pendingDelete, setPendingDelete] = useState<EventSummary | null>(null)
+  const [isPremium, setIsPremium] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  useEffect(() => {
+    getUserProfile()
+      .then((profile) => setIsPremium(profile.subscriptionStatus === 'active'))
+      .catch((err) => console.error('Failed to load user profile', err))
+  }, [])
+
+  const handleCheckout = () => {
+    setIsModalOpen(true)
+  }
 
   const confirmDelete = async () => {
     if (!pendingDelete) return
@@ -40,17 +55,37 @@ export function EventsListPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-2xl px-5 py-8 [animation:var(--animate-fade-in)]">
-        <div className="mb-6 flex items-end justify-between gap-4">
+        <div className="mb-6 flex flex-col items-start gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Meus Eventos</h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-bold tracking-tight">Meus Eventos</h1>
+              {isPremium && (
+                <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-primary">
+                  PRO
+                </span>
+              )}
+            </div>
             <p className="mt-1 text-on-surface-variant">
               Continue de onde parou ou planeje uma nova festa.
             </p>
           </div>
-          <Button icon="plus" onClick={() => navigate('/new')}>
-            Criar
-          </Button>
+          <div className="flex w-full items-center gap-3 sm:w-auto">
+            {!isPremium && (
+              <Button
+                variant="secondary"
+                icon="sparkles"
+                onClick={handleCheckout}
+                className="flex-1 sm:flex-none justify-center"
+              >
+                Assinar Premium
+              </Button>
+            )}
+            <Button icon="plus" onClick={() => navigate('/new')} className="flex-1 sm:flex-none justify-center">
+              Criar
+            </Button>
+          </div>
         </div>
+
 
         {isLoading && <SkeletonList rows={3} />}
 
@@ -84,11 +119,15 @@ export function EventsListPage() {
                 key={event.id}
                 tabIndex={0}
                 role="button"
-                onClick={() => navigate(`/events/${event.id}/items`)}
+                onClick={() => {
+                  const targetRoute = event.finalizedAt ? `/events/${event.id}/dashboard` : `/events/${event.id}/items`
+                  navigate(targetRoute)
+                }}
                 onKeyDown={(keyEvent) => {
                   if (keyEvent.key === 'Enter' || keyEvent.key === ' ') {
                     keyEvent.preventDefault()
-                    navigate(`/events/${event.id}/items`)
+                    const targetRoute = event.finalizedAt ? `/events/${event.id}/dashboard` : `/events/${event.id}/items`
+                    navigate(targetRoute)
                   }
                 }}
                 className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container-lowest transition-all duration-200 hover:-translate-y-0.5 hover:border-outline-variant/60 hover:shadow-[var(--shadow-card)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
@@ -208,6 +247,11 @@ export function EventsListPage() {
         confirmLabel="Excluir"
         onConfirm={confirmDelete}
         onCancel={() => setPendingDelete(null)}
+      />
+
+      <SubscriptionModal 
+        open={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
       />
     </>
   )

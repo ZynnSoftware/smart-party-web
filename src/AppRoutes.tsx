@@ -7,11 +7,19 @@ import { NotesStep } from '@/pages/Wizard/steps/NotesStep'
 import { ItemsStep } from '@/pages/Wizard/steps/ItemsStep'
 import { BudgetStep } from '@/pages/Wizard/steps/BudgetStep'
 import { SplitStep } from '@/pages/Wizard/steps/SplitStep/index'
+import { SuccessPage } from '@/pages/Success'
+import { CancelPage } from '@/pages/Cancel'
+import { ProfilePage } from '@/pages/Profile/ProfilePage'
+import { EventDashboardPage } from '@/pages/Dashboard/EventDashboardPage'
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<EventsListPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/success" element={<SuccessPage />} />
+      <Route path="/cancel" element={<CancelPage />} />
+      <Route path="/events/:id/dashboard" element={<EventDashboardPage />} />
       <Route element={<WizardLayout />}>
         <Route path="/new" element={<MoodStep />} />
         <Route path="/events/:id/guests" element={<GuestsStep />} />

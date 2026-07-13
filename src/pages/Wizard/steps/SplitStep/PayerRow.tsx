@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import { Icon, type IconName } from '@/components/ui/Icon'
+import { useEffect, useRef, useState } from 'react'
+import { Icon } from '@/components/ui/Icon'
 import { formatBRL } from '@/utils/money'
 import type { Payer, SplitEntry, SplitMethod, PaymentStatus } from '@/types/domain'
 
@@ -13,24 +13,30 @@ interface PayerRowProps {
   onRename: (value: string) => void
   onRenameBlur: () => void
   onSize: (size: number) => void
-  onAmount: (amount: number) => void
+  onToggleDrinks: (drinks: boolean) => void
+  onAmount: (amount: number | null) => void
   onTogglePayment: (status: PaymentStatus) => void
   onRemove: () => void
 }
 
-function SizeChip({ active, icon, onClick, children }: { active: boolean, icon: IconName, onClick: () => void, children: ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex cursor-pointer items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-all rounded-full ${
-        active ? 'bg-on-surface text-surface' : 'bg-transparent text-on-surface-variant hover:bg-surface-container-high'
-      }`}
-    >
-      <Icon name={icon} size={14} />
-      {children}
-    </button>
-  )
+
+function useFlash(value: number) {
+  const [flash, setFlash] = useState<'up' | 'down' | null>(null)
+  const prevRef = useRef(value)
+
+  useEffect(() => {
+    if (value > prevRef.current) {
+      setFlash('up')
+    } else if (value < prevRef.current) {
+      setFlash('down')
+    }
+    prevRef.current = value
+
+    const timer = setTimeout(() => setFlash(null), 800)
+    return () => clearTimeout(timer)
+  }, [value])
+
+  return flash
 }
 
 export function PayerRow({
@@ -40,6 +46,7 @@ export function PayerRow({
   onRename,
   onRenameBlur,
   onSize,
+  onToggleDrinks,
   onAmount,
   onTogglePayment,
   onRemove,
@@ -47,76 +54,160 @@ export function PayerRow({
   const status = entry?.status ?? 'pending'
   const isPaid = status === 'paid'
   const isCouple = payer.size >= COUPLE_SIZE
+  const drinksAlcohol = payer.drinksAlcohol !== false
+  const amount = entry?.amount ?? 0
+  const isFixed = entry?.breakdown?.isFixed ?? false
+
+  const flash = useFlash(amount)
 
   return (
-    <div className="flex flex-col gap-3 rounded-3xl bg-surface-container-highest/30 p-4 transition-all hover:bg-surface-container-highest/50">
-      <div className="flex items-center justify-between gap-3">
-        <div className="relative flex-1 group flex items-center">
-            <input
-              value={payer.name}
-              onChange={(e) => onRename(e.target.value)}
-              onBlur={onRenameBlur}
-              placeholder="Nome do pagador"
-              className="w-full min-w-0 bg-transparent py-1 text-lg sm:text-xl font-bold tracking-tight text-on-surface outline-none transition-all placeholder:text-on-surface-variant/30 focus:text-primary pr-6"
-            />
-            <Icon 
-              name="edit" 
-              size={14} 
-              className="absolute right-2 opacity-30 transition-opacity group-focus-within:opacity-0 pointer-events-none" 
-            />
-            <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-focus-within:w-full" />
+    <div className="flex items-center gap-3 p-3 bg-surface rounded-[20px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-outline-variant/20 transition-all hover:border-outline-variant/40">
+      
+      {/* Left: Status Avatar */}
+      <button 
+        type="button"
+        onClick={() => onTogglePayment(status)}
+        className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+          isPaid 
+            ? 'bg-primary text-on-primary shadow-sm' 
+            : 'bg-surface-container-highest text-on-surface-variant/40 hover:text-on-surface-variant'
+        }`}
+        title={isPaid ? 'Marcar como Pendente' : 'Marcar como Pago'}
+      >
+        <Icon name={isPaid ? 'check' : 'person'} size={20} />
+      </button>
+
+      {/* Middle: Name & Inline Controls */}
+      <div className="flex flex-col flex-1 min-w-0 py-0.5">
+        <div className="relative group flex items-center">
+          <input
+            value={payer.name}
+            onChange={(e) => onRename(e.target.value)}
+            onBlur={onRenameBlur}
+            placeholder="Nome do pagador"
+            className="w-full text-base sm:text-lg font-bold tracking-tight text-on-surface bg-transparent outline-none truncate pr-6 placeholder:text-on-surface-variant/30 focus:text-primary"
+          />
+          <Icon name="edit" size={12} className="absolute right-2 opacity-0 transition-opacity group-focus-within:opacity-30 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 h-px w-0 bg-primary transition-all duration-300 group-focus-within:w-full" />
         </div>
-        
-        <button
-          type="button"
-          aria-label={`Remover ${payer.name}`}
-          onClick={onRemove}
-          className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-on-surface-variant/40 transition hover:bg-error/10 hover:text-error"
-        >
-          <Icon name="trash" size={16} />
-        </button>
+
+        <div className="flex flex-wrap items-center gap-2 mt-2">
+          {/* Size Segmented Control */}
+          <div className="flex items-center p-0.5 bg-surface-container-highest/20 rounded-md ring-1 ring-outline-variant/10">
+            <button 
+              type="button"
+              onClick={() => onSize(PERSON_SIZE)} 
+              className={`flex items-center gap-1.5 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest transition-all ${
+                !isCouple 
+                  ? 'bg-surface shadow-sm text-on-surface' 
+                  : 'text-on-surface-variant/50 hover:text-on-surface'
+              }`}
+            >
+              <Icon name="person" size={10} /> Pessoa
+            </button>
+            <button 
+              type="button"
+              onClick={() => onSize(COUPLE_SIZE)} 
+              className={`flex items-center gap-1.5 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest transition-all ${
+                isCouple 
+                  ? 'bg-surface shadow-sm text-on-surface' 
+                  : 'text-on-surface-variant/50 hover:text-on-surface'
+              }`}
+            >
+              <Icon name="couple" size={10} /> Casal
+            </button>
+          </div>
+
+          {/* Drinks Segmented Control */}
+          {method === 'custom' && (
+            <div className="flex items-center p-0.5 bg-surface-container-highest/20 rounded-md ring-1 ring-outline-variant/10">
+              <button 
+                type="button"
+                onClick={() => onToggleDrinks(true)} 
+                className={`flex items-center gap-1.5 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest transition-all ${
+                  drinksAlcohol 
+                    ? 'bg-primary/10 text-primary' 
+                    : 'text-on-surface-variant/50 hover:text-on-surface'
+                }`}
+              >
+                🍻 Álcool
+              </button>
+              <button 
+                type="button"
+                onClick={() => onToggleDrinks(false)} 
+                className={`flex items-center gap-1.5 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest transition-all ${
+                  !drinksAlcohol 
+                    ? 'bg-primary/10 text-primary' 
+                    : 'text-on-surface-variant/50 hover:text-on-surface'
+                }`}
+              >
+                🥤 Só Refri
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-1 rounded-full bg-surface-container-highest/50 p-1">
-          <SizeChip active={!isCouple} icon="person" onClick={() => onSize(PERSON_SIZE)}>
-            1
-          </SizeChip>
-          <SizeChip active={isCouple} icon="couple" onClick={() => onSize(COUPLE_SIZE)}>
-            2
-          </SizeChip>
-        </div>
-
-        <div className="flex items-center gap-3">
+      {/* Right: Amount, Extrato & Trash */}
+      <div className="flex flex-col items-end shrink-0 pl-1">
+        <div className="flex items-center gap-1 sm:gap-2">
           {method === 'custom' ? (
-            <div className="flex items-baseline gap-1 border-b-2 border-outline-variant/30 focus-within:border-primary transition-colors pb-0.5">
-              <span className="text-sm font-bold text-on-surface-variant/40">R$</span>
-              <input
-                type="number"
-                min={0}
-                defaultValue={entry?.amount ?? 0}
-                onBlur={(e) => onAmount(Number(e.target.value))}
-                className="w-16 sm:w-20 bg-transparent text-right text-xl font-black tabular-nums text-on-surface outline-none"
-              />
+            <div className="flex items-center gap-1">
+              {isFixed && (
+                <button 
+                  onClick={() => onAmount(null)} 
+                  className="text-on-surface-variant/30 hover:text-primary transition-colors p-1"
+                  title="Destravar valor"
+                >
+                  <Icon name="lock" size={12} />
+                </button>
+              )}
+              <div 
+                className={`flex items-baseline gap-0.5 border-b transition-colors ${
+                  isFixed ? 'border-transparent' : 'border-outline-variant/30 focus-within:border-primary'
+                } ${flash === 'up' ? 'text-error' : flash === 'down' ? 'text-primary' : ''}`}
+                style={{ transition: flash ? 'none' : 'color 0.5s ease-out' }}
+              >
+                <span className="text-[10px] font-bold text-on-surface-variant/50">R$</span>
+                <input
+                  type="number"
+                  min={0}
+                  placeholder="Auto"
+                  value={entry?.amount ?? ''}
+                  onChange={(e) => onAmount(e.target.value === '' ? null : Number(e.target.value))}
+                  className={`w-20 sm:w-24 bg-transparent text-right text-lg sm:text-xl font-black tabular-nums outline-none placeholder:text-on-surface-variant/30 ${
+                    isFixed ? 'text-on-surface-variant/70' : 'text-on-surface'
+                  }`}
+                />
+              </div>
             </div>
           ) : (
-            <span className="text-xl font-black tabular-nums text-primary">
-              {formatBRL(entry?.amount ?? 0)}
+            <span className="text-lg sm:text-xl font-black tabular-nums text-primary pr-1">
+              {formatBRL(amount)}
             </span>
           )}
 
-          <button
-            type="button"
-            onClick={() => onTogglePayment(status)}
-            className={`flex cursor-pointer items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-widest transition-all ${
-              isPaid
-                ? 'bg-primary/20 text-primary ring-1 ring-primary/30'
-                : 'bg-surface-container-highest text-on-surface-variant/50 hover:bg-surface-container-highest/80 hover:text-on-surface-variant'
-            }`}
+          <button 
+            onClick={onRemove} 
+            className="flex h-7 w-7 items-center justify-center rounded-full text-on-surface-variant/30 hover:bg-error/10 hover:text-error transition-colors"
+            title="Remover"
           >
-            {isPaid && <Icon name="check" size={14} className="-ml-1" />}
-            {isPaid ? 'Pago' : 'Pendente'}
+            <Icon name="trash" size={14} />
           </button>
+        </div>
+
+        {/* Mini Extrato aligned right but pushed left from trash */}
+        <div className="pr-8 sm:pr-9 mt-0.5">
+          {method === 'custom' && entry?.breakdown && !isFixed && (
+            <span className="block text-[9px] font-medium tracking-wider text-on-surface-variant/50 text-right whitespace-nowrap">
+              {formatBRL(entry.breakdown.food)} 🍔 {entry.breakdown.alcohol > 0 && `+ ${formatBRL(entry.breakdown.alcohol)} 🍻`}
+            </span>
+          )}
+          {method === 'custom' && isFixed && (
+            <span className="block text-[9px] font-medium tracking-wider text-on-surface-variant/50 text-right">
+              Valor travado
+            </span>
+          )}
         </div>
       </div>
     </div>

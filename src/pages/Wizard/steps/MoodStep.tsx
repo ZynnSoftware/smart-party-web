@@ -5,6 +5,7 @@ import { Icon, type IconName } from '@/components/ui/Icon'
 import { Stepper } from '@/components/Stepper'
 import { useWizard } from '@/contexts/WizardContext'
 import type { Mood, Restrictions } from '@/types/domain'
+import { SubscriptionModal } from '@/components/SubscriptionModal'
 
 interface MoodOption {
   mood: Mood
@@ -90,6 +91,7 @@ export function MoodStep() {
   const { startDraft, isSaving, error } = useWizard()
   const [selected, setSelected] = useState<Mood | null>(null)
   const [name, setName] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   // Only the mood is required; the name is optional and defaults from the mood.
   const canProceed = Boolean(selected)
@@ -107,8 +109,10 @@ export function MoodStep() {
         restrictions: EMPTY_RESTRICTIONS,
       })
       navigate(`/events/${created.id}/guests`)
-    } catch {
-      // startDraft already surfaced the error via context; stay on this step.
+    } catch (err: any) {
+      if (err?.code === 'FREE_LIMIT_REACHED') {
+        setIsModalOpen(true)
+      }
     }
   }
 
@@ -206,6 +210,11 @@ export function MoodStep() {
           </div>
         </div>
       )}
+
+      <SubscriptionModal 
+        open={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   )
 }

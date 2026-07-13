@@ -1,5 +1,6 @@
 import { BrowserRouter } from 'react-router-dom'
 import { AppRoutes } from './AppRoutes'
+import { RequireAuth } from './auth/RequireAuth'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { ToastProvider } from './contexts/ToastContext'
 import { WizardProvider } from './contexts/WizardContext'
@@ -9,9 +10,11 @@ function App() {
     <ThemeProvider>
       <ToastProvider>
         <BrowserRouter>
-          <WizardProvider>
-            <AppRoutes />
-          </WizardProvider>
+          <RequireAuth>
+            <WizardProvider>
+              <AppRoutes />
+            </WizardProvider>
+          </RequireAuth>
         </BrowserRouter>
       </ToastProvider>
     </ThemeProvider>

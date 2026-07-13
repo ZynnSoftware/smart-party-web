@@ -19,6 +19,7 @@ const baseEvent: Event = {
   payers: [],
   splitShares: {},
   payments: {},
+  purchasedItems: [],
   finalizedAt: null,
   createdAt: '2026-07-01T12:00:00.000Z',
   updatedAt: '2026-07-01T12:00:00.000Z',

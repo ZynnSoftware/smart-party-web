@@ -32,7 +32,10 @@ export function WizardProvider({ children }: PropsWithChildren) {
       const created = await eventsService.create(payload)
       setEvent(created)
       return created
-    } catch {
+    } catch (err: any) {
+      if (err.response?.status === 402 || err.response?.data?.code === 'FREE_LIMIT_REACHED') {
+        throw { code: 'FREE_LIMIT_REACHED' }
+      }
       setError(SAVE_ERROR)
       throw new Error(SAVE_ERROR)
     } finally {

@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
+import { SignedIn, useUser } from '@clerk/clerk-react'
 import { Icon } from '@/components/ui/Icon'
-import { useTheme } from '@/contexts/ThemeContext'
+import { useNavigate } from 'react-router-dom'
 
-/** App top bar: brand (links home) + theme toggle. Sticky, blurred. */
+/** App top bar: brand (links home) + theme toggle + account. Sticky, blurred. */
 export function TopBar() {
-  const { theme, toggleTheme } = useTheme()
+  const navigate = useNavigate()
+  const { user } = useUser()
 
   return (
     <header className="sticky top-4 z-40 w-full px-4 transition-all duration-300">
@@ -14,14 +16,26 @@ export function TopBar() {
           <span className="text-lg font-medium tracking-tight text-on-surface">Smart Party</span>
         </Link>
 
-        <button
-          type="button"
-          onClick={toggleTheme}
-          aria-label={theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-on-surface-variant transition duration-300 hover:bg-surface-container hover:text-on-surface"
-        >
-          <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={18} />
-        </button>
+        <div className="flex items-center gap-2">
+          <SignedIn>
+            <button
+              type="button"
+              onClick={() => navigate('/profile')}
+              aria-label="Meu Perfil"
+              className="group flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-outline-variant/30 bg-surface-container-lowest transition-all hover:scale-105 active:scale-95"
+            >
+              {user?.imageUrl ? (
+                <img 
+                  src={user.imageUrl} 
+                  alt="Perfil" 
+                  className="h-full w-full rounded-full object-cover"
+                />
+              ) : (
+                <Icon name="person" size={18} className="text-on-surface-variant group-hover:text-on-surface" />
+              )}
+            </button>
+          </SignedIn>
+        </div>
       </div>
     </header>
   )

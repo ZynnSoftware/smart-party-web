@@ -87,6 +87,7 @@ export interface Event {
   payers: Payer[]
   splitShares: Record<string, number>
   payments: Record<string, PaymentStatus>
+  purchasedItems: string[]
   finalizedAt: string | null
   createdAt: string
   updatedAt: string
@@ -96,8 +97,10 @@ export interface Event {
 export type EventSummary = Event & { estimatedTotal: number }
 
 export interface Payer {
+  id?: string
   name: string
   size: number
+  drinksAlcohol?: boolean
 }
 
 export interface SplitEntry {
@@ -105,6 +108,12 @@ export interface SplitEntry {
   size: number
   amount: number
   status: PaymentStatus
+  breakdown?: {
+    food: number
+    alcohol: number
+    difference: number
+    isFixed: boolean
+  }
 }
 
 export interface SplitResult {

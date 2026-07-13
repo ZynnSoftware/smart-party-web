@@ -1,131 +1,52 @@
-import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Icon } from '@/components/ui/Icon'
 import { SkeletonList } from '@/components/ui/Skeleton'
 import { Stepper } from '@/components/Stepper'
-import { useWizard } from '@/contexts/WizardContext'
 import { useToast } from '@/contexts/ToastContext'
-import { useEstimate } from '@/hooks/useEstimate'
 import { eventsService } from '@/services/events'
-import { copyText } from '@/utils/clipboard'
-import type { Event, Payer, PaymentStatus, SplitMethod } from '@/types/domain'
-
 import { CostSummary } from './CostSummary'
 import { PixKeyCard } from './PixKeyCard'
 import { PayerRow } from './PayerRow'
-import { ChargeModal, buildChargeMessage } from './ChargeModal'
-
-const PERSON_SIZE = 1
-const COUPLE_SIZE = 2
-
-function seedPayers(event: Event): Payer[] {
-  if (event.payers.length > 0) return event.payers
-  
-  const payers: Payer[] = []
-  const couples = event.guests.couples ?? 0
-  for (let i = 0; i < couples; i++) {
-    payers.push({ name: `Casal ${i + 1}`, size: COUPLE_SIZE })
-  }
-
-  const soloAdults = event.guests.adults - couples * 2
-  for (let i = 0; i < soloAdults; i++) {
-    payers.push({ name: `Convidado ${i + 1}`, size: PERSON_SIZE })
-  }
-
-  return payers
-}
+import { ChargeModal } from './ChargeModal'
+import { useSplitStep } from './useSplitStep'
 
 export function SplitStep() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { event, patch } = useWizard()
   const { showToast } = useToast()
-  const { estimate, isLoading, error, refresh } = useEstimate(id)
 
-  const [payers, setPayers] = useState<Payer[]>([])
-  const [method, setMethod] = useState<SplitMethod>('equal')
-  const [pixKey, setPixKey] = useState('')
-  const [isFinalizeOpen, setFinalizeOpen] = useState(false)
-  const [isFinalizing, setFinalizing] = useState(false)
-  const [chargeMessage, setChargeMessage] = useState<string | null>(null)
-  const [justCopied, setJustCopied] = useState(false)
-
-  useEffect(() => {
-    if (!event) return
-    setMethod(event.splitMethod)
-    setPixKey(event.pixKey ?? '')
-    setPayers(seedPayers(event))
-  }, [event])
-
-  const persist = async (payload: Parameters<typeof patch>[0]) => {
-    await patch(payload)
-    await refresh()
-  }
-
-  const commitPayers = (nextPayers: Payer[]) => {
-    setPayers(nextPayers)
-    void persist({ payers: nextPayers })
-  }
-
-  const addPayer = (size: number) => {
-    const label = size === COUPLE_SIZE ? 'Casal' : 'Convidado'
-    commitPayers([...payers, { name: `${label} ${payers.length + 1}`, size }])
-  }
-
-  const renamePayer = (index: number, name: string) =>
-    setPayers((current) =>
-      current.map((payer, position) =>
-        position === index ? { ...payer, name } : payer,
-      ),
-    )
-
-  const setPayerSize = (index: number, size: number) =>
-    commitPayers(
-      payers.map((payer, position) =>
-        position === index ? { ...payer, size } : payer,
-      ),
-    )
-
-  const removePayer = (index: number) =>
-    commitPayers(payers.filter((_, position) => position !== index))
-
-  const changeMethod = (nextMethod: SplitMethod) => {
-    setMethod(nextMethod)
-    void persist({ splitMethod: nextMethod })
-  }
-
-  const setCustomAmount = (name: string, amount: number) => {
-    const splitShares = { ...(event?.splitShares ?? {}), [name]: amount }
-    void persist({ splitShares })
-  }
-
-  const togglePayment = (name: string, current: PaymentStatus) => {
-    const next: PaymentStatus = current === 'paid' ? 'pending' : 'paid'
-    const payments = { ...(event?.payments ?? {}), [name]: next }
-    void persist({ payments })
-  }
-
-  const savePixKey = () => void persist({ pixKey: pixKey.trim() })
-
-  const openCharge = () => {
-    if (!estimate) return
-    setChargeMessage(buildChargeMessage(estimate, pixKey.trim()))
-    setJustCopied(false)
-  }
-
-  const copyCharge = async () => {
-    if (!chargeMessage) return
-    const copied = await copyText(chargeMessage)
-    setJustCopied(copied)
-    if (copied) {
-      showToast('Cobrança copiada!')
-      window.setTimeout(() => setJustCopied(false), 2_000)
-    } else {
-      showToast('Não consegui copiar — selecione o texto e copie', 'error')
-    }
-  }
+  const {
+    estimate,
+    isLoading,
+    error,
+    payers,
+    method,
+    pixKey,
+    setPixKey,
+    isFinalizeOpen,
+    setFinalizeOpen,
+    isFinalizing,
+    setFinalizing,
+    chargeMessage,
+    setChargeMessage,
+    justCopied,
+    addPayer,
+    renamePayer,
+    setPayerSize,
+    togglePayerDrinks,
+    removePayer,
+    changeMethod,
+    setCustomAmount,
+    togglePayment,
+    savePixKey,
+    openCharge,
+    copyCharge,
+    commitPayers,
+    PERSON_SIZE,
+    COUPLE_SIZE
+  } = useSplitStep(id)
 
   const handleFinalize = async () => {
     if (!id) return
@@ -200,19 +121,20 @@ export function SplitStep() {
       </div>
 
       <div className="mb-8">
-        <div className="flex flex-col gap-2">
-          {payers.map((payer, index) => (
+        <div className="flex flex-col gap-4">
+          {payers.map((payer) => (
             <PayerRow
-              key={index}
+              key={payer.id}
               payer={payer}
               method={method}
               entry={split.entries.find((entry) => entry.name === payer.name)}
-              onRename={(value) => renamePayer(index, value)}
+              onRename={(value) => renamePayer(payer.id!, value)}
               onRenameBlur={() => commitPayers(payers)}
-              onSize={(size) => setPayerSize(index, size)}
+              onSize={(size) => setPayerSize(payer.id!, size)}
+              onToggleDrinks={(drinks) => togglePayerDrinks(payer.id!, drinks)}
               onAmount={(amount) => setCustomAmount(payer.name, amount)}
               onTogglePayment={(status) => togglePayment(payer.name, status)}
-              onRemove={() => removePayer(index)}
+              onRemove={() => removePayer(payer.id!)}
             />
           ))}
         </div>
