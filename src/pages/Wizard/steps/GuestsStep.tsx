@@ -201,9 +201,9 @@ export function GuestsStep() {
 
       <div className="fixed bottom-0 left-0 right-0 z-50 flex flex-col items-center border-t border-outline-variant/20 bg-background/80 px-4 py-4 pb-safe shadow-[var(--shadow-floating)] backdrop-blur-xl [animation:var(--animate-rise)_forwards]">
         <div className="w-full max-w-2xl flex items-center justify-between gap-4">
-          <div className="hidden sm:flex flex-col">
-            <span className="text-xs font-medium uppercase tracking-widest text-on-surface-variant">Total Estimado</span>
-            <span className="text-2xl font-bold text-primary">{total} Convidados</span>
+          <div className="flex min-w-0 shrink-0 flex-col">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-on-surface-variant sm:text-xs">Convidados</span>
+            <span className="text-lg font-bold text-primary tabular-nums sm:text-2xl">{total}</span>
           </div>
           
           <div className="flex flex-1 gap-3 sm:flex-none">

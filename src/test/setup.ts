@@ -10,6 +10,11 @@ vi.mock('@clerk/clerk-react', () => ({
     isSignedIn: true,
     getToken: async () => 'test-token',
   }),
+  useUser: () => ({
+    isLoaded: true,
+    isSignedIn: true,
+    user: { firstName: 'Teste', imageUrl: '' },
+  }),
   ClerkProvider: ({ children }: { children?: unknown }) => children,
   SignedIn: ({ children }: { children?: unknown }) => children,
   SignedOut: () => null,

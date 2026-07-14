@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Outlet, useParams, useLocation } from 'react-router-dom'
 import { TopBar } from '@/components/TopBar'
+import { SaveIndicator } from '@/components/SaveIndicator'
 import { useWizard } from '@/contexts/WizardContext'
 
 /**
@@ -37,6 +38,7 @@ export function WizardLayout() {
   return (
     <>
       <TopBar />
+      <SaveIndicator />
       <main className="mx-auto max-w-2xl px-5 py-8">
         <Outlet />
       </main>

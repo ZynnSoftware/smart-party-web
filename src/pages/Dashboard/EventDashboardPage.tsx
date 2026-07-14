@@ -273,12 +273,21 @@ export function EventDashboardPage() {
 
           {/* Checklist */}
           <section className="overflow-hidden rounded-[32px] border border-outline-variant/40 bg-surface-container-lowest shadow-[var(--shadow-card)]">
-            <div className="border-b border-outline-variant/20 bg-surface-container-low/50 px-6 py-4">
-              <div className="flex items-center gap-3">
-                <Icon name="check" size={24} className="text-primary" />
-                <h2 className="font-bold text-on-surface">Lista de Compras</h2>
+            <div className="flex items-center justify-between gap-3 border-b border-outline-variant/20 bg-surface-container-low/50 px-6 py-4">
+              <div className="min-w-0">
+                <div className="flex items-center gap-3">
+                  <Icon name="check" size={24} className="text-primary" />
+                  <h2 className="font-bold text-on-surface">Lista de Compras</h2>
+                </div>
+                <p className="mt-1 text-xs text-on-surface-variant">Marque os itens no mercado.</p>
               </div>
-              <p className="mt-1 text-xs text-on-surface-variant">Marque os itens no mercado.</p>
+              <Button
+                iconRight="arrow-right"
+                onClick={() => navigate(`/events/${event.id}/shopping`)}
+                className="shrink-0"
+              >
+                Modo Mercado
+              </Button>
             </div>
             
             <div className="p-2 sm:p-4">

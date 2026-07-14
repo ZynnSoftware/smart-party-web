@@ -11,6 +11,7 @@ import { SuccessPage } from '@/pages/Success'
 import { CancelPage } from '@/pages/Cancel'
 import { ProfilePage } from '@/pages/Profile/ProfilePage'
 import { EventDashboardPage } from '@/pages/Dashboard/EventDashboardPage'
+import { ShoppingModePage } from '@/pages/Shopping/ShoppingModePage'
 
 export function AppRoutes() {
   return (
@@ -20,6 +21,7 @@ export function AppRoutes() {
       <Route path="/success" element={<SuccessPage />} />
       <Route path="/cancel" element={<CancelPage />} />
       <Route path="/events/:id/dashboard" element={<EventDashboardPage />} />
+      <Route path="/events/:id/shopping" element={<ShoppingModePage />} />
       <Route element={<WizardLayout />}>
         <Route path="/new" element={<MoodStep />} />
         <Route path="/events/:id/guests" element={<GuestsStep />} />

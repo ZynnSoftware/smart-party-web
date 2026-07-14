@@ -59,6 +59,11 @@ export function PayerRow({
   const isFixed = entry?.breakdown?.isFixed ?? false
 
   const flash = useFlash(amount)
+  // Recomputed splits (e.g. toggling Álcool/Só Refri) can carry repeating
+  // decimals; never surface the raw float in the editable field.
+  const displayAmount = entry?.amount != null ? Math.round(entry.amount * 100) / 100 : ''
+  const flashClass =
+    flash === 'up' ? 'text-error' : flash === 'down' ? 'text-tertiary' : ''
 
   return (
     <div className="flex items-center gap-3 p-3 bg-surface rounded-[20px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-outline-variant/20 transition-all hover:border-outline-variant/40">
@@ -162,21 +167,22 @@ export function PayerRow({
                   <Icon name="lock" size={12} />
                 </button>
               )}
-              <div 
+              <div
                 className={`flex items-baseline gap-0.5 border-b transition-colors ${
                   isFixed ? 'border-transparent' : 'border-outline-variant/30 focus-within:border-primary'
-                } ${flash === 'up' ? 'text-error' : flash === 'down' ? 'text-primary' : ''}`}
+                } ${flashClass}`}
                 style={{ transition: flash ? 'none' : 'color 0.5s ease-out' }}
               >
                 <span className="text-[10px] font-bold text-on-surface-variant/50">R$</span>
                 <input
                   type="number"
                   min={0}
+                  step={0.01}
                   placeholder="Auto"
-                  value={entry?.amount ?? ''}
+                  value={displayAmount}
                   onChange={(e) => onAmount(e.target.value === '' ? null : Number(e.target.value))}
-                  className={`w-20 sm:w-24 bg-transparent text-right text-lg sm:text-xl font-black tabular-nums outline-none placeholder:text-on-surface-variant/30 ${
-                    isFixed ? 'text-on-surface-variant/70' : 'text-on-surface'
+                  className={`w-20 sm:w-24 bg-transparent text-right text-lg sm:text-xl font-black tabular-nums outline-none transition-colors placeholder:text-on-surface-variant/30 ${
+                    flashClass || (isFixed ? 'text-on-surface-variant/70' : 'text-on-surface')
                   }`}
                 />
               </div>

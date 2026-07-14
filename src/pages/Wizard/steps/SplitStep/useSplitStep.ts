@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useWizard } from '@/contexts/WizardContext'
 import { useEstimate } from '@/hooks/useEstimate'
 import { useToast } from '@/contexts/ToastContext'
 import { copyText } from '@/utils/clipboard'
+import { alcoholTotalFromItems, computeSplitPreview } from '@/utils/splitPreview'
 import type { Payer, PaymentStatus, SplitMethod, Event } from '@/types/domain'
 import { buildChargeMessage } from './ChargeModal'
 
@@ -48,13 +49,44 @@ export function useSplitStep(id?: string) {
   const [isFinalizing, setFinalizing] = useState(false)
   const [chargeMessage, setChargeMessage] = useState<string | null>(null)
   const [justCopied, setJustCopied] = useState(false)
+  // Optimistic overlays applied on top of the server event while a save is in
+  // flight — `null` in shares means "fixed value removed".
+  const [paymentsOverride, setPaymentsOverride] = useState<Record<string, PaymentStatus>>({})
+  const [sharesOverride, setSharesOverride] = useState<Record<string, number | null>>({})
 
   useEffect(() => {
     if (!event) return
     setMethod(event.splitMethod)
     setPixKey(event.pixKey ?? '')
     setPayers(seedPayers(event))
+    // Server state caught up — the optimistic overlays served their purpose.
+    setPaymentsOverride({})
+    setSharesOverride({})
   }, [event])
+
+  /**
+   * Split computed locally from the CURRENT UI state (payers/method/overrides),
+   * mirroring the API engine. This is what makes amounts react on the very
+   * click instead of after the PATCH + estimate round-trip.
+   */
+  const previewSplit = useMemo(() => {
+    if (!estimate) return null
+
+    const splitShares: Record<string, number> = { ...(event?.splitShares ?? {}) }
+    for (const [name, amount] of Object.entries(sharesOverride)) {
+      if (amount === null) delete splitShares[name]
+      else splitShares[name] = amount
+    }
+
+    return computeSplitPreview({
+      method,
+      payers,
+      splitShares,
+      payments: { ...(event?.payments ?? {}), ...paymentsOverride },
+      keptTotal: estimate.budget.keptTotal,
+      alcoholTotal: alcoholTotalFromItems(estimate.budget.items),
+    })
+  }, [estimate, event, method, payers, paymentsOverride, sharesOverride])
 
   const persist = async (payload: Parameters<typeof patch>[0]) => {
     await patch(payload)
@@ -101,6 +133,9 @@ export function useSplitStep(id?: string) {
   }
 
   const setCustomAmount = (name: string, amount: number | null) => {
+    // Optimistic: the preview reacts immediately; the PATCH follows.
+    setSharesOverride((current) => ({ ...current, [name]: amount }))
+
     const splitShares = { ...(event?.splitShares ?? {}) }
     if (amount === null) {
       delete splitShares[name]
@@ -112,6 +147,9 @@ export function useSplitStep(id?: string) {
 
   const togglePayment = (name: string, current: PaymentStatus) => {
     const next: PaymentStatus = current === 'paid' ? 'pending' : 'paid'
+    // Optimistic: the avatar/outstanding react immediately; the PATCH follows.
+    setPaymentsOverride((overrides) => ({ ...overrides, [name]: next }))
+
     const payments = { ...(event?.payments ?? {}), [name]: next }
     void persist({ payments })
   }
@@ -140,6 +178,8 @@ export function useSplitStep(id?: string) {
     estimate,
     isLoading,
     error,
+    refresh,
+    previewSplit,
     event,
     payers,
     method,

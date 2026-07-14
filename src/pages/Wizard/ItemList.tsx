@@ -162,6 +162,16 @@ function CategoryGroup({ catItems, meta, showCuts, guestCount, setOverride, forc
                       </p>
                     )}
                   </div>
+                  {item.priceRange && (
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                      <span className="rounded-md bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-600">
+                        Estimativa
+                      </span>
+                      <p className="text-xs font-medium text-on-surface-variant/70 tabular-nums">
+                        {formatBRL(item.priceRange.min)}–{formatBRL(item.priceRange.max)}/{item.unit} no mercado
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex w-full items-center justify-between gap-4 sm:w-auto">

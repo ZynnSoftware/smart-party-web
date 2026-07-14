@@ -50,6 +50,12 @@ export interface ConsumptionRule {
   defaultUnitPrice: number
 }
 
+/** Estimated per-unit market price band, in BRL. Heuristic, not live data. */
+export interface PriceRange {
+  min: number
+  max: number
+}
+
 export interface EstimatedItem {
   itemId: string
   name: string
@@ -58,6 +64,8 @@ export interface EstimatedItem {
   quantity: number
   unitPrice: number
   totalPrice: number
+  /** Estimated per-unit price band around unitPrice. Optional for older payloads. */
+  priceRange?: PriceRange
   essential: boolean
   cutByBudget?: boolean
   isCustom?: boolean

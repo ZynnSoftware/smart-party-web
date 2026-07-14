@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom'
 import { SignedIn, useUser } from '@clerk/clerk-react'
 import { Icon } from '@/components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
+import { useTheme } from '@/contexts/ThemeContext'
 
 /** App top bar: brand (links home) + theme toggle + account. Sticky, blurred. */
 export function TopBar() {
   const navigate = useNavigate()
   const { user } = useUser()
+  const { theme, toggleTheme } = useTheme()
 
   return (
     <header className="sticky top-4 z-40 w-full px-4 transition-all duration-300">
@@ -17,6 +19,18 @@ export function TopBar() {
         </Link>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
+            className="group flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-outline-variant/30 bg-surface-container-lowest transition-all hover:scale-105 active:scale-95"
+          >
+            <Icon
+              name={theme === 'dark' ? 'sun' : 'moon'}
+              size={18}
+              className="text-on-surface-variant transition-colors group-hover:text-on-surface"
+            />
+          </button>
           <SignedIn>
             <button
               type="button"

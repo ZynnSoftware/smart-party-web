@@ -23,7 +23,8 @@ describe('EventsListPage', () => {
     renderPage()
 
     expect(await screen.findByText('Churras de teste')).toBeInTheDocument()
-    expect(screen.getByText('R$ 254,40')).toBeInTheDocument()
+    // The total shows on the event card and may repeat on the stats strip.
+    expect(screen.getAllByText('R$ 254,40').length).toBeGreaterThan(0)
     expect(screen.getByText(/Churrasco Clássico/)).toBeInTheDocument()
   })
 

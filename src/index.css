@@ -46,6 +46,8 @@
   --animate-fade-in: fade-in 0.4s ease-out;
   --animate-rise: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   --animate-page-enter: page-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-delayed: float 7s ease-in-out 1.2s infinite;
 }
 
 /* Dark theme — applied by ThemeProvider via data-theme on <html>. */
@@ -122,6 +124,17 @@
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+/* Gentle vertical drift for the landing hero collage. */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
   }
 }
 

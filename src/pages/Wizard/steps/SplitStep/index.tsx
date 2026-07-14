@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { EmptyState } from '@/components/EmptyState'
 import { Icon } from '@/components/ui/Icon'
 import { SkeletonList } from '@/components/ui/Skeleton'
 import { Stepper } from '@/components/Stepper'
@@ -21,6 +22,8 @@ export function SplitStep() {
     estimate,
     isLoading,
     error,
+    refresh,
+    previewSplit,
     payers,
     method,
     pixKey,
@@ -69,10 +72,26 @@ export function SplitStep() {
       </div>
     )
   }
-  if (error) return <p className="py-10 text-error">{error}</p>
+  if (error) {
+    return (
+      <div className="py-10">
+        <EmptyState
+          illustration="error"
+          title="Não conseguimos carregar a divisão"
+          description={error}
+          action={
+            <Button icon="restore" onClick={() => refresh()}>
+              Tentar de novo
+            </Button>
+          }
+        />
+      </div>
+    )
+  }
   if (!estimate) return null
 
-  const { split } = estimate
+  // Locally computed split reacts on the click; the server estimate is the fallback.
+  const split = previewSplit ?? estimate.split
   const isFinalized = estimate.event.finalizedAt !== null
   const totalPeople = split.entries.reduce((sum, entry) => sum + entry.size, 0)
   const perPerson =
