@@ -34,8 +34,8 @@
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
     # CSP tuned for this Vite/React SPA: scripts are same-origin bundles; React
     # uses inline style attributes (needs 'unsafe-inline' for style); /api is
-    # same-origin via the proxy above (connect-src 'self'); the Inter font loads
-    # from Google Fonts (googleapis stylesheet + gstatic font files).
+    # same-origin via the proxy above (connect-src 'self'); Inter/Sora fonts are
+    # self-hosted via @fontsource (bundled same-origin, no external font host).
     #
     # Clerk (auth): loads its JS and talks to the Frontend API on
     # *.clerk.accounts.dev (test/dev instances) — for a production Clerk instance
@@ -44,4 +44,4 @@
     # clerk-telemetry.com, and runs Cloudflare Turnstile (challenges.cloudflare.com)
     # for bot protection, which needs script-src + frame-src. worker-src blob: is
     # for Clerk's web worker.
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://*.clerk.accounts.dev https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://img.clerk.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.clerk.accounts.dev https://clerk-telemetry.com; worker-src 'self' blob:; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://*.clerk.accounts.dev https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://img.clerk.com; font-src 'self' data:; connect-src 'self' https://*.clerk.accounts.dev https://clerk-telemetry.com; worker-src 'self' blob:; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"

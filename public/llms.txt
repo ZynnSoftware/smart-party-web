@@ -1,0 +1,15 @@
+# reparteaí
+
+> Planejador de festas com IA: o host escolhe o clima da festa (churrasco, aniversário,
+> reunião íntima, evento grande), informa quantidade de convidados (adultos e crianças)
+> e restrições alimentares (vegano, vegetariano, sem glúten, sem lactose). O sistema gera
+> automaticamente uma lista de compras com quantidades e preços estimados, permite
+> orçamento máximo (reprioriza itens essenciais se estourar) e divide a conta entre os
+> convidados (igual ou personalizado) com cobrança via Pix.
+
+- Site: https://www.reparteai.com.br
+- Idioma: português (Brasil)
+- Primeiro evento é gratuito, sem cartão de crédito.
+- Divisão de custos entre convidados é feita via Pix.
+- O produto é majoritariamente usado após login (área logada); a página pública
+  principal é a home (https://www.reparteai.com.br/).

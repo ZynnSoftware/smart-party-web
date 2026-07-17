@@ -16,6 +16,42 @@ const ORGANIZATION_JSON_LD = {
   logo: 'https://www.reparteai.com.br/favicon.svg',
 }
 
+const FAQ_ITEMS = [
+  {
+    question: 'Preciso pagar para começar a usar o reparteaí?',
+    answer:
+      'Não. O primeiro evento é gratuito e não pede cartão de crédito. Você paga só se quiser criar mais eventos depois do primeiro.',
+  },
+  {
+    question: 'Como funciona a divisão da conta entre os convidados?',
+    answer:
+      'O reparteaí calcula o valor de cada convidado com base no consumo estimado (adultos e crianças contam diferente) e gera a cobrança para enviar direto no Pix, com rateio igual ou personalizado.',
+  },
+  {
+    question: 'A lista de compras é gerada automaticamente?',
+    answer:
+      'Sim. Você escolhe o clima da festa (churrasco, aniversário, pool party etc.), informa o número de convidados e restrições alimentares, e o sistema monta a lista com quantidades e preços estimados.',
+  },
+  {
+    question: 'O que acontece se eu definir um orçamento máximo?',
+    answer:
+      'O reparteaí reprioriza a lista automaticamente, cortando primeiro os itens não essenciais para manter o total dentro do orçamento definido.',
+  },
+] as const
+
+const FAQ_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ_ITEMS.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+}
+
 const STEPS = [
   {
     icon: 'party',
@@ -67,7 +103,7 @@ export function SignedOutLanding() {
         title="reparteaí — a festa perfeita começa com um plano"
         description="Lista de compras, orçamento e divisão da conta calculados em segundos. Você só se preocupa em receber bem."
         path="/"
-        jsonLd={ORGANIZATION_JSON_LD}
+        jsonLd={[ORGANIZATION_JSON_LD, FAQ_JSON_LD]}
       />
       <TopBar />
 
@@ -251,6 +287,27 @@ export function SignedOutLanding() {
                     {feature.description}
                   </p>
                 </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─── Perguntas frequentes ─── */}
+        <section className="pb-20">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl">
+              Perguntas frequentes
+            </h2>
+          </div>
+
+          <div className="mx-auto grid max-w-3xl gap-4">
+            {FAQ_ITEMS.map((item) => (
+              <div
+                key={item.question}
+                className="rounded-3xl border border-outline-variant/30 bg-surface-container-lowest/70 p-6 shadow-[var(--shadow-card)] backdrop-blur-sm"
+              >
+                <h3 className="font-extrabold tracking-tight text-on-surface">{item.question}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{item.answer}</p>
               </div>
             ))}
           </div>
