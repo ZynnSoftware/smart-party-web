@@ -1,11 +1,13 @@
 import { SignInButton } from '@clerk/clerk-react'
 import { Link } from 'react-router-dom'
+import { Footer } from '@/components/Footer'
 import { Seo } from '@/components/Seo'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/Button'
-import { Icon } from '@/components/ui/Icon'
-import { Logo } from '@/components/ui/Logo'
+import { Icon, type IconName } from '@/components/ui/Icon'
 import { moodImage, moodLabel } from '@/utils/moods'
+import { HomeCalculator } from './HomeCalculator'
+import { HomeRecipesStrip } from './HomeRecipesStrip'
 
 const ORGANIZATION_JSON_LD = {
   '@context': 'https://schema.org',
@@ -109,7 +111,7 @@ export function SignedOutLanding() {
       <TopBar />
 
       {/* Ambient brand glow, both themes. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-clip">
         <div className="absolute -top-32 right-[-10%] h-[420px] w-[420px] rounded-full bg-primary/15 blur-[100px]" />
         <div className="absolute top-[35%] left-[-12%] h-[380px] w-[380px] rounded-full bg-tertiary-container/15 blur-[100px]" />
         <div className="absolute bottom-[-10%] right-[15%] h-[300px] w-[300px] rounded-full bg-primary/10 blur-[90px]" />
@@ -152,10 +154,10 @@ export function SignedOutLanding() {
                 </Button>
               </SignInButton>
               <a
-                href="#como-funciona"
+                href="#calculadora"
                 className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full px-6 text-base font-bold text-on-surface-variant transition-colors hover:bg-surface-container hover:text-on-surface sm:w-auto"
               >
-                Ver como funciona
+                Calcular minha festa
                 <Icon name="chevron-down" size={18} />
               </a>
             </div>
@@ -252,14 +254,20 @@ export function SignedOutLanding() {
           </div>
         </section>
 
+        <HomeCalculator />
+
         {/* ─── Como funciona ─── */}
         <section id="como-funciona" className="scroll-mt-24 pb-20">
           <div className="mb-10 text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl">
-              Do convite ao Pix em três passos
+            <span className="text-xs font-bold uppercase tracking-[0.14em] text-primary">
+              Como funciona
+            </span>
+            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl">
+              Gostou da estimativa? Ela é só o começo.
             </h2>
             <p className="mx-auto mt-3 max-w-md text-on-surface-variant">
-              Sem planilha, sem calculadora, sem "quanto ficou pra cada um?".
+              Aquele valor vira lista de compras, orçamento e cobrança no Pix — em três passos, sem
+              planilha e sem "quanto ficou pra cada um?".
             </p>
           </div>
 
@@ -288,6 +296,18 @@ export function SignedOutLanding() {
 
         {/* ─── Recursos ─── */}
         <section className="pb-20">
+          <div className="mb-10 text-center">
+            <span className="text-xs font-bold uppercase tracking-[0.14em] text-primary">
+              Por trás do cálculo
+            </span>
+            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl">
+              Mais que uma lista de compras
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-on-surface-variant">
+              Em cada um desses passos tem uma inteligência cuidando dos detalhes que dão trabalho.
+            </p>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2">
             {FEATURES.map((feature) => (
               <div
@@ -308,12 +328,20 @@ export function SignedOutLanding() {
           </div>
         </section>
 
+        <HomeRecipesStrip />
+
         {/* ─── Perguntas frequentes ─── */}
         <section className="pb-20">
           <div className="mb-10 text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl">
+            <span className="text-xs font-bold uppercase tracking-[0.14em] text-primary">
+              Ficou alguma dúvida?
+            </span>
+            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-on-surface sm:text-4xl">
               Perguntas frequentes
             </h2>
+            <p className="mx-auto mt-3 max-w-md text-on-surface-variant">
+              O que os anfitriões costumam perguntar antes de criar o primeiro evento.
+            </p>
           </div>
 
           <div className="mx-auto grid max-w-3xl gap-4">
@@ -331,57 +359,65 @@ export function SignedOutLanding() {
 
         {/* ─── CTA final ─── */}
         <section className="pb-16">
-          <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-primary to-primary-container p-10 text-center shadow-[var(--shadow-floating)] sm:p-14">
+          <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-primary to-primary-container shadow-[var(--shadow-floating)]">
             <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
             <div aria-hidden className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-black/10 blur-2xl" />
 
-            <Icon name="party" size={40} className="mx-auto mb-4 text-on-primary" />
-            <h2 className="text-3xl font-black tracking-tight text-on-primary sm:text-4xl">
-              Pronto para a próxima festa?
-            </h2>
-            <p className="mx-auto mt-3 max-w-sm font-medium text-on-primary/85">
-              Crie seu primeiro evento em menos de um minuto. É grátis.
-            </p>
-            <div className="mt-8 flex justify-center">
-              <SignInButton mode="modal" fallbackRedirectUrl="/">
-                <button
-                  type="button"
-                  className="flex h-14 cursor-pointer items-center gap-2 rounded-full bg-background px-8 text-lg font-bold text-on-surface shadow-xl transition-transform hover:scale-[1.03] active:scale-95"
-                >
-                  Começar agora
-                  <Icon name="arrow-right" size={20} className="text-primary" />
-                </button>
-              </SignInButton>
+            <div className="relative grid items-center gap-10 p-10 sm:p-14 lg:grid-cols-[1.2fr_1fr]">
+              <div className="text-center lg:text-left">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-on-primary">
+                  <Icon name="party" size={14} />
+                  Última etapa
+                </span>
+                <h2 className="mt-5 text-3xl font-black leading-[1.1] tracking-tight text-on-primary sm:text-4xl">
+                  Pronto para a próxima festa?
+                </h2>
+                <p className="mx-auto mt-4 max-w-md font-medium text-on-primary/85 lg:mx-0">
+                  Você já viu quanto custa e como funciona. Falta só criar o evento — leva menos de
+                  um minuto.
+                </p>
+
+                <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
+                  <SignInButton mode="modal" fallbackRedirectUrl="/">
+                    <button
+                      type="button"
+                      className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-background px-8 text-lg font-bold text-on-surface shadow-xl transition-transform hover:scale-[1.03] active:scale-95 sm:w-auto"
+                    >
+                      Criar meu evento grátis
+                      <Icon name="arrow-right" size={20} className="text-primary" />
+                    </button>
+                  </SignInButton>
+                  <p className="text-sm font-medium text-on-primary/75">
+                    Sem cartão de crédito
+                  </p>
+                </div>
+              </div>
+
+              {/* What the host walks away with, in the product-chip style of the hero. */}
+              <ul className="mx-auto flex w-full max-w-sm flex-col gap-3">
+                {[
+                  { icon: 'receipt', text: 'Lista de compras completa, com quantidades' },
+                  { icon: 'wallet', text: 'Orçamento dentro do teto que você definir' },
+                  { icon: 'users', text: 'Conta dividida e cobrança pronta no Pix' },
+                ].map(({ icon, text }) => (
+                  <li
+                    key={text}
+                    className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3.5 backdrop-blur-sm"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-background/90 text-primary">
+                      <Icon name={icon as IconName} size={18} />
+                    </span>
+                    <p className="text-sm font-bold text-on-primary">{text}</p>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
 
-        {/* ─── Rodapé ─── */}
-        <footer className="mt-auto flex flex-col items-center gap-2 border-t border-outline-variant/20 py-8 text-center">
-          <div className="flex items-center gap-2">
-            <Logo size={18} />
-            <span className="font-display font-bold tracking-tight text-on-surface">reparteaí</span>
-          </div>
-          <p className="text-xs font-medium text-on-surface-variant/70">
-            Planeje, calcule e divida — sem dor de cabeça.
-          </p>
-          <Link
-            to="/receitas"
-            className="text-xs font-bold text-primary hover:underline"
-          >
-            Ver receitas por tipo de festa
-          </Link>
-          <div className="mt-1 flex items-center gap-3 text-xs font-medium text-on-surface-variant/70">
-            <Link to="/termos" className="hover:underline hover:text-on-surface-variant">
-              Termos de Uso
-            </Link>
-            <span aria-hidden>·</span>
-            <Link to="/privacidade" className="hover:underline hover:text-on-surface-variant">
-              Política de Privacidade
-            </Link>
-          </div>
-        </footer>
       </main>
+
+      <Footer />
     </div>
   )
 }

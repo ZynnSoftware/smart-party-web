@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Footer } from '@/components/Footer'
 import { Seo } from '@/components/Seo'
 import { TopBar } from '@/components/TopBar'
 import { Icon } from '@/components/ui/Icon'
@@ -82,6 +83,8 @@ export function RecipesListPage() {
           </Link>
         </div>
       </main>
+
+      <Footer />
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
+import { Footer } from '@/components/Footer'
 import { Seo } from '@/components/Seo'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/Button'
@@ -21,7 +22,7 @@ export function RecipeDetailPage() {
           noindex
         />
         <TopBar />
-        <div className="mx-auto max-w-2xl px-5 py-20">
+        <div className="mx-auto w-full max-w-2xl flex-1 px-5 py-20">
           <EmptyState
             illustration="error"
             title="Receita não encontrada"
@@ -33,6 +34,8 @@ export function RecipeDetailPage() {
             }
           />
         </div>
+
+        <Footer />
       </div>
     )
   }
@@ -160,6 +163,8 @@ export function RecipeDetailPage() {
           </Link>
         </div>
       </main>
+
+      <Footer />
     </div>
   )
 }

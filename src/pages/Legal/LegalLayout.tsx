@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Footer } from '@/components/Footer'
 import { Seo } from '@/components/Seo'
 import { TopBar } from '@/components/TopBar'
 
@@ -29,6 +30,8 @@ export function LegalLayout({ title, description, path, updatedAt, children }: L
           {children}
         </div>
       </main>
+
+      <Footer />
     </div>
   )
 }
