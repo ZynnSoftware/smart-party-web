@@ -13,7 +13,7 @@ export function TopBar() {
 
   return (
     <header className="sticky top-4 z-40 w-full px-4 transition-all duration-300">
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between rounded-2xl border border-outline-variant/30 bg-surface-container-lowest/70 px-5 py-2.5 shadow-[var(--shadow-card)] backdrop-blur-xl dark:border-white/10 dark:bg-surface-container-lowest/30">
+      <div className="mx-auto flex w-full max-w-5xl items-center justify-between rounded-2xl border border-outline-variant/30 bg-surface-container-lowest/70 px-5 py-2.5 shadow-[var(--shadow-card)] backdrop-blur-xl dark:border-white/10 dark:bg-surface-container-lowest/30 xl:max-w-6xl">
         <Link to="/" className="group flex items-center gap-2.5 transition-opacity hover:opacity-80">
           <Logo size={22} className="transition-transform duration-300 group-hover:scale-110" />
           <span className="font-display text-lg font-bold tracking-tight text-on-surface">reparteaí</span>

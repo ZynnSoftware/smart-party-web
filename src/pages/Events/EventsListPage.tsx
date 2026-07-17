@@ -16,6 +16,7 @@ import { eventStage } from '@/utils/eventStage'
 import type { EventSummary } from '@/types/domain'
 import { getUserProfile } from '@/services/auth'
 import { SubscriptionModal } from '@/components/SubscriptionModal'
+import { pushEvent } from '@/utils/gtm'
 
 const MORNING_STARTS_AT = 5
 const AFTERNOON_STARTS_AT = 12
@@ -65,7 +66,10 @@ export function EventsListPage() {
     showToast(`"${name}" excluído`)
   }
 
-  const openEvent = (event: EventSummary) => navigate(navigationTarget(event))
+  const openEvent = (event: EventSummary) => {
+    pushEvent('event_card_clicked', { event_id: event.id, finalized: !!event.finalizedAt })
+    navigate(navigationTarget(event))
+  }
 
   // The newest in-progress event gets the spotlight; the rest go to the grid.
   const spotlight = events.find((event) => !event.finalizedAt) ?? null
@@ -80,7 +84,7 @@ export function EventsListPage() {
   return (
     <>
       <TopBar />
-      <main className="relative mx-auto max-w-5xl overflow-x-clip px-5 pb-16 pt-10 [animation:var(--animate-fade-in)]">
+      <main className="relative mx-auto max-w-5xl overflow-x-clip px-5 pb-16 pt-10 [animation:var(--animate-fade-in)] xl:max-w-6xl">
         {/* Ambient backdrop: soft brand glows behind the hero, both themes. */}
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10">
           <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
@@ -122,7 +126,10 @@ export function EventsListPage() {
             )}
             <Button
               icon="plus"
-              onClick={() => navigate('/new')}
+              onClick={() => {
+                pushEvent('event_create_clicked')
+                navigate('/new')
+              }}
               className="flex-1 justify-center sm:flex-none"
             >
               Criar
@@ -150,7 +157,10 @@ export function EventsListPage() {
             title="Nenhum evento por aqui ainda"
             description="Que tal planejar sua próxima festa? Leva menos de um minuto."
             action={
-              <Button icon="sparkles" onClick={() => navigate('/new')}>
+              <Button icon="sparkles" onClick={() => {
+                pushEvent('event_create_clicked')
+                navigate('/new')
+              }}>
                 Planejar meu primeiro evento
               </Button>
             }
@@ -168,7 +178,7 @@ export function EventsListPage() {
 
         {/* ─── Grid with the remaining events ─── */}
         {gridEvents.length > 0 && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {gridEvents.map((event, index) => (
               <EventCard
                 key={event.id}

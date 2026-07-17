@@ -14,6 +14,7 @@ import { moodImage, moodLabel } from '@/utils/moods'
 import { generatePixPayload } from '@/utils/pix'
 import { useToast } from '@/contexts/ToastContext'
 import type { ItemCategory } from '@/types/domain'
+import { pushEvent } from '@/utils/gtm'
 
 const CATEGORY_LABELS: Record<ItemCategory, string> = {
   meat: 'Carnes',
@@ -54,7 +55,7 @@ export function EventDashboardPage() {
     return (
       <>
         <TopBar />
-        <div className="mx-auto max-w-2xl px-5 py-20">
+        <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
           <SkeletonList rows={5} />
         </div>
       </>
@@ -65,7 +66,7 @@ export function EventDashboardPage() {
     return (
       <>
         <TopBar />
-        <div className="mx-auto max-w-2xl px-5 py-20">
+        <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
           <EmptyState
             illustration="error"
             title="Evento não encontrado"
@@ -139,7 +140,7 @@ export function EventDashboardPage() {
   return (
     <>
       <TopBar />
-      <main className="mx-auto max-w-2xl pb-24 [animation:var(--animate-fade-in)]">
+      <main className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl pb-24 [animation:var(--animate-fade-in)]">
         
         {/* Hero Area */}
         <div className="relative overflow-hidden rounded-b-[40px] bg-surface-container-lowest shadow-sm border-b border-outline-variant/30">
@@ -176,7 +177,10 @@ export function EventDashboardPage() {
                 variant="secondary"
                 icon="pencil"
                 className="rounded-full"
-                onClick={() => navigate(`/events/${event.id}/items`)}
+                onClick={() => {
+                  pushEvent('dashboard_edit_clicked', { section: 'items' })
+                  navigate(`/events/${event.id}/items`)
+                }}
               >
                 Editar Festa
               </Button>
@@ -246,7 +250,10 @@ export function EventDashboardPage() {
                   <Button 
                     variant="ghost" 
                     className="mt-2"
-                    onClick={() => navigate(`/events/${event.id}/split`)}
+                    onClick={() => {
+                      pushEvent('dashboard_edit_clicked', { section: 'split' })
+                      navigate(`/events/${event.id}/split`)
+                    }}
                   >
                     Configurar agora
                   </Button>
@@ -309,7 +316,10 @@ export function EventDashboardPage() {
               </div>
               <Button
                 iconRight="arrow-right"
-                onClick={() => navigate(`/events/${event.id}/shopping`)}
+                onClick={() => {
+                  pushEvent('shopping_mode_started')
+                  navigate(`/events/${event.id}/shopping`)
+                }}
                 className="shrink-0"
               >
                 Modo Mercado

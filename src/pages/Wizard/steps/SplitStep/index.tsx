@@ -12,6 +12,7 @@ import { PixKeyCard } from './PixKeyCard'
 import { PayerRow } from './PayerRow'
 import { ChargeModal } from './ChargeModal'
 import { useSplitStep } from './useSplitStep'
+import { pushEvent } from '@/utils/gtm'
 
 export function SplitStep() {
   const navigate = useNavigate()
@@ -56,6 +57,7 @@ export function SplitStep() {
     setFinalizing(true)
     try {
       await eventsService.finalize(id)
+      pushEvent('event_finalized', { event_id: id })
       setFinalizeOpen(false)
       showToast('Evento finalizado! 🎉')
       navigate('/')
@@ -117,7 +119,10 @@ export function SplitStep() {
       <div className="mb-6 mx-auto max-w-sm w-full p-1 bg-surface-container-highest/30 rounded-full flex items-center ring-1 ring-outline-variant/20">
         <button
           type="button"
-          onClick={() => changeMethod('equal')}
+          onClick={() => {
+            changeMethod('equal')
+            pushEvent('split_method_changed', { method: 'equal' })
+          }}
           className={`flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-widest transition-all duration-300 ${
             method === 'equal' 
               ? 'bg-surface shadow-[0_2px_8px_rgba(0,0,0,0.1)] text-on-surface' 
@@ -128,7 +133,10 @@ export function SplitStep() {
         </button>
         <button
           type="button"
-          onClick={() => changeMethod('custom')}
+          onClick={() => {
+            changeMethod('custom')
+            pushEvent('split_method_changed', { method: 'custom' })
+          }}
           className={`flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-widest transition-all duration-300 ${
             method === 'custom' 
               ? 'bg-surface shadow-[0_2px_8px_rgba(0,0,0,0.1)] text-on-surface' 
@@ -160,14 +168,20 @@ export function SplitStep() {
 
         <div className="mt-4 flex gap-3">
           <button 
-            onClick={() => addPayer(PERSON_SIZE)}
+            onClick={() => {
+              addPayer(PERSON_SIZE)
+              pushEvent('payer_added', { size: PERSON_SIZE })
+            }}
             className="flex-1 rounded-[24px] border border-dashed border-outline-variant/40 py-4 flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container/50 hover:text-on-surface transition-all"
           >
             <Icon name="person" size={20} className="mb-1 opacity-70" />
             <span className="text-xs font-bold uppercase tracking-widest">+ Pessoa</span>
           </button>
           <button 
-            onClick={() => addPayer(COUPLE_SIZE)}
+            onClick={() => {
+              addPayer(COUPLE_SIZE)
+              pushEvent('payer_added', { size: COUPLE_SIZE })
+            }}
             className="flex-1 rounded-[24px] border border-dashed border-outline-variant/40 py-4 flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container/50 hover:text-on-surface transition-all"
           >
             <Icon name="couple" size={20} className="mb-1 opacity-70" />
@@ -175,8 +189,11 @@ export function SplitStep() {
           </button>
         </div>
       </div>
-
-      <PixKeyCard pixKey={pixKey} onChange={setPixKey} onSave={savePixKey} />
+      
+      <PixKeyCard pixKey={pixKey} onChange={setPixKey} onSave={(key) => {
+        savePixKey(key)
+        pushEvent('pix_key_saved', { key_type: key.includes('@') ? 'email' : key.length === 11 ? 'cpf/phone' : 'other' })
+      }} />
 
       {isFinalized && (
         <div className="mb-6 flex items-center justify-center gap-2 rounded-2xl bg-tertiary-container/40 p-4">
@@ -188,7 +205,10 @@ export function SplitStep() {
       )}
 
       <div className="flex flex-col gap-3">
-        <Button size="lg" className="w-full" icon="share" onClick={openCharge}>
+        <Button size="lg" className="w-full" icon="share" onClick={() => {
+          openCharge()
+          pushEvent('charge_generated', { total_amount: split.total, payers_count: payers.length, method: split.method })
+        }}>
           Gerar cobrança
         </Button>
         {!isFinalized && (

@@ -33,7 +33,7 @@ export function JoinEventPage() {
     return (
       <>
         <TopBar />
-        <div className="mx-auto max-w-2xl px-5 py-20">
+        <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
           <EmptyState illustration="error" title="Link inválido" description="Confira o link recebido e tente novamente." />
         </div>
       </>
@@ -44,7 +44,7 @@ export function JoinEventPage() {
     return (
       <>
         <TopBar />
-        <div className="mx-auto max-w-2xl px-5 py-20">
+        <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
           <SkeletonList rows={2} />
         </div>
       </>
@@ -55,7 +55,7 @@ export function JoinEventPage() {
     return (
       <>
         <TopBar />
-        <div className="mx-auto max-w-2xl px-5 py-20">
+        <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
           <EmptyState
             illustration="error"
             title="Não foi possível entrar"
@@ -71,7 +71,7 @@ export function JoinEventPage() {
     return (
       <>
         <TopBar />
-        <div className="mx-auto max-w-2xl px-5 py-20">
+        <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
           <EmptyState
             illustration="party"
             title="Você foi convidado para um evento"
@@ -90,7 +90,7 @@ export function JoinEventPage() {
   return (
     <>
       <TopBar />
-      <div className="mx-auto max-w-2xl px-5 py-20">
+      <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
         <SkeletonList rows={2} />
       </div>
     </>

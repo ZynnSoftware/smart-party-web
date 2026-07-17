@@ -9,6 +9,7 @@ import { useToast } from '@/contexts/ToastContext'
 import { eventsService } from '@/services/events'
 import { formatBRL, formatQuantity } from '@/utils/money'
 import type { EstimatedItem, ItemCategory } from '@/types/domain'
+import { pushEvent } from '@/utils/gtm'
 
 /** Supermarket aisle walking order — meat counter first, disposables last. */
 const AISLE_ORDER: ItemCategory[] = [
@@ -80,8 +81,19 @@ export function ShoppingModePage() {
     // Optimistic: flip locally first — store connectivity is never reliable.
     setPurchased((prev) => {
       const next = new Set(prev)
-      if (next.has(itemId)) next.delete(itemId)
-      else next.add(itemId)
+      if (next.has(itemId)) {
+        next.delete(itemId)
+        pushEvent('shopping_item_unchecked', { item_category: 'shopping' })
+      } else {
+        next.add(itemId)
+        pushEvent('shopping_item_checked', { item_category: 'shopping' })
+      }
+      
+      // If this was the last item, dispatch completed
+      if (next.size === totalCount && totalCount > 0) {
+        pushEvent('shopping_completed', { total_checked: next.size, total_items: totalCount })
+      }
+
       return next
     })
 
@@ -98,7 +110,7 @@ export function ShoppingModePage() {
 
   if (isLoading && !estimate) {
     return (
-      <div className="mx-auto max-w-2xl px-5 py-16">
+      <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-16">
         <SkeletonList rows={6} />
       </div>
     )
@@ -108,7 +120,7 @@ export function ShoppingModePage() {
   // refresh failing after the list already loaded shouldn't wipe out the checklist.
   if (!estimate) {
     return (
-      <div className="mx-auto max-w-2xl px-5 py-16">
+      <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-16">
         <EmptyState
           illustration="error"
           title="Não conseguimos carregar a lista"
@@ -127,7 +139,7 @@ export function ShoppingModePage() {
     <div className="min-h-dvh bg-background pb-10">
       {/* Compact sticky header: every vertical pixel matters in the aisle. */}
       <header className="sticky top-0 z-40 border-b border-outline-variant/20 bg-background/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 pb-3 pt-4">
+        <div className="mx-auto flex max-w-2xl lg:max-w-3xl xl:max-w-4xl items-center gap-3 px-4 pb-3 pt-4">
           <button
             type="button"
             aria-label="Voltar"
@@ -152,7 +164,7 @@ export function ShoppingModePage() {
           </div>
         </div>
 
-        <div className="mx-auto max-w-2xl px-4 pb-3">
+        <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-4 pb-3">
           <div className="h-2 overflow-hidden rounded-full bg-surface-container-high">
             <div
               className={`h-full rounded-full transition-all duration-500 ${isAllDone ? 'bg-tertiary' : 'bg-primary'}`}
@@ -172,7 +184,7 @@ export function ShoppingModePage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-2xl px-4 pt-4 [animation:var(--animate-fade-in)]">
+      <main className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-4 pt-4 [animation:var(--animate-fade-in)]">
         {isAllDone && (
           <div className="mb-4 flex items-center gap-4 rounded-3xl bg-tertiary-container/15 p-5 [animation:var(--animate-pop-in)]">
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-tertiary text-on-tertiary">

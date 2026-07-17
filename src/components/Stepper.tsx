@@ -11,7 +11,7 @@ export function Stepper({ current }: StepperProps) {
   const currentLabel = STEP_LABELS[current - 1] || ''
 
   return (
-    <nav className="mb-10" aria-label="Progresso">
+    <nav className="mb-10 lg:hidden" aria-label="Progresso">
       <div className="flex flex-col gap-3">
         <div className="flex items-end justify-between">
           <div className="flex items-baseline gap-1.5 font-medium tracking-tight">

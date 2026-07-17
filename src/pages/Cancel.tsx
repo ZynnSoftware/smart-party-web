@@ -9,7 +9,7 @@ export function CancelPage() {
   return (
     <>
       <TopBar />
-      <main className="mx-auto flex max-w-2xl flex-col items-center justify-center px-5 py-20 text-center [animation:var(--animate-fade-in)]">
+      <main className="mx-auto flex max-w-2xl lg:max-w-3xl xl:max-w-4xl flex-col items-center justify-center px-5 py-20 text-center [animation:var(--animate-fade-in)]">
         <EmptyState
           illustration="error"
           title="Pagamento Cancelado"

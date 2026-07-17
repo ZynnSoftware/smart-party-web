@@ -10,6 +10,7 @@ import { useEstimate } from '@/hooks/useEstimate'
 import { ItemList, RemovedItems } from '../ItemList'
 import { formatBRL } from '@/utils/money'
 import type { ItemOverride, ExtraItem } from '@/types/domain'
+import { pushEvent } from '@/utils/gtm'
 
 export function ItemsStep() {
   const navigate = useNavigate()
@@ -43,6 +44,7 @@ export function ItemsStep() {
     }
     const extraItems = [...(event?.extraItems ?? []), newItem]
     await patch({ extraItems })
+    pushEvent('item_added', { item_name: newItem.name, item_price: newItem.unitPrice })
     setNewCustomName('')
     setNewCustomPrice('')
     await refresh()
@@ -205,7 +207,15 @@ export function ItemsStep() {
             <Button
               className="flex-1 shadow-lg sm:w-56"
               iconRight="arrow-right"
-              onClick={() => navigate(`/events/${id}/budget`)}
+              onClick={() => {
+                pushEvent('wizard_step_completed', {
+                  step: 'items',
+                  total_items: items.length,
+                  items_removed_count: estimate.removedItems.length,
+                  custom_items_count: event?.extraItems?.length ?? 0
+                })
+                navigate(`/events/${id}/budget`)
+              }}
             >
               Orçamento e Divisão
             </Button>

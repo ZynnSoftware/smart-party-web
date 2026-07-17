@@ -10,6 +10,7 @@ import { useEstimate } from '@/hooks/useEstimate'
 import { ItemList, RemovedItems } from '../ItemList'
 import { formatBRL } from '@/utils/money'
 import type { ItemOverride } from '@/types/domain'
+import { pushEvent } from '@/utils/gtm'
 
 export function BudgetStep() {
   const navigate = useNavigate()
@@ -26,6 +27,7 @@ export function BudgetStep() {
     const parsed = Number(rawValue)
     const budgetCap = rawValue === '' || Number.isNaN(parsed) ? undefined : parsed
     await patch({ budgetCap })
+    pushEvent('budget_cap_toggled', { enabled: budgetCap !== undefined, amount: budgetCap })
     await refresh()
   }
 
@@ -267,7 +269,15 @@ export function BudgetStep() {
             <Button
               className="flex-1 shadow-lg sm:w-56"
               iconRight="arrow-right"
-              onClick={() => navigate(`/events/${id}/split`)}
+              onClick={() => {
+                pushEvent('wizard_step_completed', {
+                  step: 'budget',
+                  has_cap: cap !== '',
+                  cap_amount: cap ? Number(cap) : 0,
+                  items_cut_count: items.filter(i => i.cutByBudget).length
+                })
+                navigate(`/events/${id}/split`)
+              }}
             >
               Dividir custos
             </Button>

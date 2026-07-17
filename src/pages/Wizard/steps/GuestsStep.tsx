@@ -7,6 +7,7 @@ import { Stepper } from '@/components/Stepper'
 import { useWizard } from '@/contexts/WizardContext'
 import { APPETITE_OPTIONS, DEFAULT_APPETITE } from '@/utils/appetite'
 import type { Appetite, DietaryTag, Guests, Restrictions } from '@/types/domain'
+import { pushEvent } from '@/utils/gtm'
 
 const RESTRICTION_LABELS: Record<DietaryTag, string> = {
   vegan: 'Veganos',
@@ -51,13 +52,24 @@ export function GuestsStep() {
   const invalidRestrictions = Object.entries(restrictions).filter(([_, count]) => count > total)
   const canProceed = !hasZeroGuests && invalidRestrictions.length === 0
 
-  const setRestriction = (tag: DietaryTag, value: number) =>
+  const setRestriction = (tag: DietaryTag, value: number) => {
     setRestrictions((current) => ({ ...current, [tag]: value }))
+    pushEvent('restriction_added', { restriction_type: tag, count: value })
+  }
 
   const handleNext = async () => {
     if (!canProceed) return
     const guests: Guests = { adults: totalAdults, children, couples }
     await patch({ guests, restrictions, appetite })
+    pushEvent('wizard_step_completed', {
+      step: 'guests',
+      total_guests: total,
+      adults: totalAdults,
+      children,
+      couples,
+      appetite,
+      has_restrictions: Object.values(restrictions).some((v) => v > 0),
+    })
     navigate(`/events/${id}/notes`)
   }
 
@@ -126,7 +138,10 @@ export function GuestsStep() {
               <button
                 key={option.appetite}
                 type="button"
-                onClick={() => setAppetite(option.appetite)}
+                onClick={() => {
+                  setAppetite(option.appetite)
+                  pushEvent('appetite_changed', { appetite: option.appetite })
+                }}
                 className={`flex flex-1 flex-col items-center justify-center gap-1.5 rounded-xl py-3 px-1 text-center transition-all duration-300 ${
                   isSelected
                     ? 'bg-surface-container-lowest text-primary shadow-[var(--shadow-card)] ring-1 ring-primary/10'

@@ -7,6 +7,7 @@ import { useWizard } from '@/contexts/WizardContext'
 import type { Mood, Restrictions } from '@/types/domain'
 import { SubscriptionModal } from '@/components/SubscriptionModal'
 import { MOOD_FILTER_LABELS, MOOD_FILTER_TAGS, type MoodFilterTag } from '@/utils/moods'
+import { pushEvent } from '@/utils/gtm'
 
 interface MoodOption {
   mood: Mood
@@ -211,6 +212,11 @@ export function MoodStep() {
         guests: { adults: DEFAULT_ADULTS, children: 0 },
         restrictions: EMPTY_RESTRICTIONS,
       })
+      pushEvent('wizard_step_completed', {
+        step: 'mood',
+        mood: selected,
+        event_name_customized: name.trim() !== '' && name.trim() !== fallbackName,
+      })
       navigate(`/events/${created.id}/guests`)
     } catch (err: any) {
       if (err?.code === 'FREE_LIMIT_REACHED') {
@@ -263,7 +269,10 @@ export function MoodStep() {
         >
           <button
             type="button"
-            onClick={() => setActiveFilter(null)}
+            onClick={() => {
+              setActiveFilter(null)
+              pushEvent('mood_filter_clicked', { filter_tag: 'all' })
+            }}
             className={`shrink-0 cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
               activeFilter === null
                 ? 'border-primary bg-primary text-on-primary'
@@ -276,7 +285,11 @@ export function MoodStep() {
             <button
               key={tag}
               type="button"
-              onClick={() => setActiveFilter((current) => (current === tag ? null : tag))}
+              onClick={() => {
+                const newFilter = activeFilter === tag ? null : tag
+                setActiveFilter(newFilter)
+                pushEvent('mood_filter_clicked', { filter_tag: newFilter || 'all' })
+              }}
               className={`shrink-0 cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                 activeFilter === tag
                   ? 'border-primary bg-primary text-on-primary'
@@ -290,7 +303,7 @@ export function MoodStep() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
         {visibleOptions.map((option, index) => {
           const isSelected = selected === option.mood
           // Image name maps from the mood type e.g. 'classic-barbecue' -> 'mood_classic_barbecue.png'
@@ -301,7 +314,10 @@ export function MoodStep() {
             <button
               key={option.mood}
               type="button"
-              onClick={() => setSelected(option.mood)}
+              onClick={() => {
+                setSelected(option.mood)
+                pushEvent('mood_selected', { mood: option.mood })
+              }}
               style={{ animation: 'var(--animate-rise)', animationFillMode: 'both', animationDelay: `${250 + index * 50}ms` }}
               className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-xl border-2 text-left transition-all duration-300 ${
                 isSelected

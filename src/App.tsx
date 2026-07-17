@@ -5,12 +5,19 @@ import { JoinEventPage } from './pages/JoinEvent/JoinEventPage'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { ToastProvider } from './contexts/ToastContext'
 import { WizardProvider } from './contexts/WizardContext'
+import { usePageTracking } from './hooks/usePageTracking'
+
+function PageTracker() {
+  usePageTracking()
+  return null
+}
 
 function App() {
   return (
     <ThemeProvider>
       <ToastProvider>
         <BrowserRouter>
+          <PageTracker />
           <Routes>
             {/* Outside the global auth gate: it handles signed-out visitors
                 itself so the invite link survives the sign-in round trip. */}

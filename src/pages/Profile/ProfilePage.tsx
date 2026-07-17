@@ -54,7 +54,7 @@ export function ProfilePage() {
   return (
     <>
       <TopBar />
-      <main className="mx-auto max-w-2xl pb-16 [animation:var(--animate-fade-in)]">
+      <main className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl pb-16 [animation:var(--animate-fade-in)]">
         
         {/* Hero Section */}
         <div className="relative rounded-b-[40px] bg-surface-container-lowest px-6 pb-12 pt-8 text-center shadow-sm border-b border-outline-variant/30">

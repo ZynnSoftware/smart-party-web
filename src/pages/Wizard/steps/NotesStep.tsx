@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Stepper } from '@/components/Stepper'
 import { useWizard } from '@/contexts/WizardContext'
+import { pushEvent } from '@/utils/gtm'
 
 export function NotesStep() {
   const navigate = useNavigate()
@@ -13,6 +14,11 @@ export function NotesStep() {
 
   const handleNext = async () => {
     await patch({ notes })
+    pushEvent('wizard_step_completed', {
+      step: 'notes',
+      skipped: notes.trim() === '',
+      text_length: notes.length,
+    })
     navigate(`/events/${id}/items`)
   }
 
