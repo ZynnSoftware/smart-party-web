@@ -166,6 +166,21 @@ export function SignedOutLanding() {
             >
               Primeiro evento grátis · Sem cartão de crédito
             </p>
+
+            <p
+              className="mt-3 text-xs font-medium text-on-surface-variant/60 [animation:var(--animate-rise)]"
+              style={{ animationDelay: '340ms', animationFillMode: 'backwards' }}
+            >
+              Ao continuar, você concorda com os{' '}
+              <Link to="/termos" className="font-bold underline hover:text-on-surface-variant">
+                Termos de Uso
+              </Link>{' '}
+              e a{' '}
+              <Link to="/privacidade" className="font-bold underline hover:text-on-surface-variant">
+                Política de Privacidade
+              </Link>
+              .
+            </p>
           </div>
 
           {/* Floating collage of real product moods. */}
@@ -356,6 +371,15 @@ export function SignedOutLanding() {
           >
             Ver receitas por tipo de festa
           </Link>
+          <div className="mt-1 flex items-center gap-3 text-xs font-medium text-on-surface-variant/70">
+            <Link to="/termos" className="hover:underline hover:text-on-surface-variant">
+              Termos de Uso
+            </Link>
+            <span aria-hidden>·</span>
+            <Link to="/privacidade" className="hover:underline hover:text-on-surface-variant">
+              Política de Privacidade
+            </Link>
+          </div>
         </footer>
       </main>
     </div>

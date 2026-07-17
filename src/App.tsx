@@ -19,6 +19,12 @@ const RecipesListPage = lazy(() =>
 const RecipeDetailPage = lazy(() =>
   import('./pages/Recipes/RecipeDetailPage').then((m) => ({ default: m.RecipeDetailPage })),
 )
+const TermsPage = lazy(() =>
+  import('./pages/Legal/TermsPage').then((m) => ({ default: m.TermsPage })),
+)
+const PrivacyPage = lazy(() =>
+  import('./pages/Legal/PrivacyPage').then((m) => ({ default: m.PrivacyPage })),
+)
 
 function PageTracker() {
   usePageTracking()
@@ -66,6 +72,22 @@ function App() {
                 element={
                   <Suspense fallback={null}>
                     <RecipeDetailPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/termos"
+                element={
+                  <Suspense fallback={null}>
+                    <TermsPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/privacidade"
+                element={
+                  <Suspense fallback={null}>
+                    <PrivacyPage />
                   </Suspense>
                 }
               />

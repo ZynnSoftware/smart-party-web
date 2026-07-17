@@ -13,6 +13,18 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.reparteai.com.br/termos</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.reparteai.com.br/privacidade</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://www.reparteai.com.br/receitas/costela-de-churrasco-para-20-pessoas</loc>
     <lastmod>2026-07-17</lastmod>
     <changefreq>monthly</changefreq>
