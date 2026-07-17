@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth, SignInButton } from '@clerk/clerk-react'
+import { Seo } from '@/components/Seo'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/Button'
 import { SkeletonList } from '@/components/ui/Skeleton'
@@ -32,6 +33,7 @@ export function JoinEventPage() {
   if (!id || !token) {
     return (
       <>
+        <Seo title="Convite para evento — reparteaí" description="Você foi convidado para um evento no reparteaí." path={`/events/${id}/join`} noindex />
         <TopBar />
         <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
           <EmptyState illustration="error" title="Link inválido" description="Confira o link recebido e tente novamente." />
@@ -43,6 +45,7 @@ export function JoinEventPage() {
   if (!isLoaded) {
     return (
       <>
+        <Seo title="Convite para evento — reparteaí" description="Você foi convidado para um evento no reparteaí." path={`/events/${id}/join`} noindex />
         <TopBar />
         <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
           <SkeletonList rows={2} />
@@ -54,6 +57,7 @@ export function JoinEventPage() {
   if (error) {
     return (
       <>
+        <Seo title="Convite para evento — reparteaí" description="Você foi convidado para um evento no reparteaí." path={`/events/${id}/join`} noindex />
         <TopBar />
         <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
           <EmptyState
@@ -70,6 +74,7 @@ export function JoinEventPage() {
   if (!isSignedIn) {
     return (
       <>
+        <Seo title="Convite para evento — reparteaí" description="Você foi convidado para um evento no reparteaí." path={`/events/${id}/join`} noindex />
         <TopBar />
         <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
           <EmptyState
@@ -89,6 +94,7 @@ export function JoinEventPage() {
 
   return (
     <>
+      <Seo title="Convite para evento — reparteaí" description="Você foi convidado para um evento no reparteaí." path={`/events/${id}/join`} noindex />
       <TopBar />
       <div className="mx-auto max-w-2xl lg:max-w-3xl xl:max-w-4xl px-5 py-20">
         <SkeletonList rows={2} />

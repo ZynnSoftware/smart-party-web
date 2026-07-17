@@ -1,3 +1,4 @@
+import { HelmetProvider } from 'react-helmet-async'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AppRoutes } from './AppRoutes'
 import { RequireAuth } from './auth/RequireAuth'
@@ -14,28 +15,30 @@ function PageTracker() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <ToastProvider>
-        <BrowserRouter>
-          <PageTracker />
-          <Routes>
-            {/* Outside the global auth gate: it handles signed-out visitors
-                itself so the invite link survives the sign-in round trip. */}
-            <Route path="/events/:id/join" element={<JoinEventPage />} />
-            <Route
-              path="*"
-              element={
-                <RequireAuth>
-                  <WizardProvider>
-                    <AppRoutes />
-                  </WizardProvider>
-                </RequireAuth>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </ToastProvider>
-    </ThemeProvider>
+    <HelmetProvider>
+      <ThemeProvider>
+        <ToastProvider>
+          <BrowserRouter>
+            <PageTracker />
+            <Routes>
+              {/* Outside the global auth gate: it handles signed-out visitors
+                  itself so the invite link survives the sign-in round trip. */}
+              <Route path="/events/:id/join" element={<JoinEventPage />} />
+              <Route
+                path="*"
+                element={
+                  <RequireAuth>
+                    <WizardProvider>
+                      <AppRoutes />
+                    </WizardProvider>
+                  </RequireAuth>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </ToastProvider>
+      </ThemeProvider>
+    </HelmetProvider>
   )
 }
 

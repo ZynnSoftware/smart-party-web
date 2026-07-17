@@ -1,9 +1,20 @@
 import { SignInButton } from '@clerk/clerk-react'
+import { Seo } from '@/components/Seo'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { Logo } from '@/components/ui/Logo'
 import { moodImage, moodLabel } from '@/utils/moods'
+
+const ORGANIZATION_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'reparteaí',
+  url: 'https://reparteai.com.br',
+  description:
+    'Planejador de festas com IA: lista de compras automática, orçamento inteligente e divisão da conta no Pix.',
+  logo: 'https://reparteai.com.br/favicon.svg',
+}
 
 const STEPS = [
   {
@@ -51,7 +62,13 @@ const FEATURES = [
 
 export function SignedOutLanding() {
   return (
-    <div className="relative min-h-dvh overflow-x-clip bg-background">
+    <div className="relative flex min-h-dvh flex-col overflow-x-clip bg-background">
+      <Seo
+        title="reparteaí — a festa perfeita começa com um plano"
+        description="Lista de compras, orçamento e divisão da conta calculados em segundos. Você só se preocupa em receber bem."
+        path="/"
+        jsonLd={ORGANIZATION_JSON_LD}
+      />
       <TopBar />
 
       {/* Ambient brand glow, both themes. */}
@@ -61,7 +78,7 @@ export function SignedOutLanding() {
         <div className="absolute bottom-[-10%] right-[15%] h-[300px] w-[300px] rounded-full bg-primary/10 blur-[90px]" />
       </div>
 
-      <main className="mx-auto max-w-6xl px-6 [animation:var(--animate-fade-in)]">
+      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 [animation:var(--animate-fade-in)]">
         {/* ─── Hero ─── */}
         <section className="grid items-center gap-12 pb-20 pt-12 sm:pt-16 lg:grid-cols-2 lg:gap-8">
           <div className="text-center lg:text-left">
@@ -266,7 +283,7 @@ export function SignedOutLanding() {
         </section>
 
         {/* ─── Rodapé ─── */}
-        <footer className="flex flex-col items-center gap-2 border-t border-outline-variant/20 py-8 text-center">
+        <footer className="mt-auto flex flex-col items-center gap-2 border-t border-outline-variant/20 py-8 text-center">
           <div className="flex items-center gap-2">
             <Logo size={18} />
             <span className="font-display font-bold tracking-tight text-on-surface">reparteaí</span>

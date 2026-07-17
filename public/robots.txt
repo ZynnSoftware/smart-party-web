@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Allow: /events/*/join
+
+Disallow: /events/*/dashboard
+Disallow: /events/*/shopping
+Disallow: /events/*/guests
+Disallow: /events/*/notes
+Disallow: /events/*/items
+Disallow: /events/*/budget
+Disallow: /events/*/split
+Disallow: /new
+Disallow: /profile
+Disallow: /success
+Disallow: /cancel
+
+Sitemap: https://reparteai.com.br/sitemap.xml
