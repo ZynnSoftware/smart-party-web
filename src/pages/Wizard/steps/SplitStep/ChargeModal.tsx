@@ -30,7 +30,7 @@ export function buildChargeMessage(estimate: EventEstimate, pixKey: string): str
     lines.push('', `🔑 *Pix:* ${pixKey}`)
   }
 
-  lines.push('', '_Organizado com o reparteaí_')
+  lines.push('', '_Feito com reparteaí — organize a sua também_')
   return lines.join('\n')
 }
 
