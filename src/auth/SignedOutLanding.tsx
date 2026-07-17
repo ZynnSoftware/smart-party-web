@@ -141,6 +141,7 @@ export function SignedOutLanding() {
                 alt=""
                 width={420}
                 height={280}
+                fetchPriority="high"
                 className="aspect-[3/2] w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />

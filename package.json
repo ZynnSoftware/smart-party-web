@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.61.8",
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/sora": "^5.2.8",
     "@stripe/stripe-js": "^9.9.0",
     "@tailwindcss/vite": "^4.3.2",
     "axios": "^1.18.1",

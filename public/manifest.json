@@ -1,0 +1,17 @@
+{
+  "name": "reparteaí — Planejador de festas",
+  "short_name": "reparteaí",
+  "description": "Planeje sua festa em minutos: lista de compras automática, orçamento inteligente e divisão da conta no Pix.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#b3290f",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}
