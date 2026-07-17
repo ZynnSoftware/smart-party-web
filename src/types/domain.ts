@@ -1,7 +1,7 @@
-export type Mood = 
-  | 'classic-barbecue' 
-  | 'birthday' 
-  | 'intimate' 
+export type Mood =
+  | 'classic-barbecue'
+  | 'birthday'
+  | 'intimate'
   | 'large-event'
   | 'casual-burger'
   | 'happy-hour'
@@ -9,6 +9,16 @@ export type Mood =
   | 'brunch'
   | 'pool-party'
   | 'baby-shower'
+  | 'new-years'
+  | 'wedding'
+  | 'graduation'
+  | 'family-lunch'
+  | 'office-party'
+  | 'rooftop'
+  | 'game-night'
+  | 'picnic'
+  | 'halloween'
+  | 'secret-santa'
 
 export type Appetite = 'light' | 'standard' | 'generous' | 'potluck'
 export type Unit = 'kg' | 'un' | 'L'
@@ -46,6 +56,7 @@ export interface ConsumptionRule {
   unit: Unit
   perAdult: number
   dietaryTag?: DietaryTag
+  excludedForTags?: DietaryTag[]
   essential: boolean
   defaultUnitPrice: number
 }
@@ -97,8 +108,17 @@ export interface Event {
   payments: Record<string, PaymentStatus>
   purchasedItems: string[]
   finalizedAt: string | null
+  /** Current invite link token; null when never shared or on a collaborator's view. */
+  inviteToken: string | null
   createdAt: string
   updatedAt: string
+}
+
+export interface EventCollaborator {
+  id: string
+  eventId: string
+  collaboratorEmail: string
+  createdAt: string
 }
 
 /** Event enriched with its derived total — returned by the list endpoint. */

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { SkeletonList } from '@/components/ui/Skeleton'
 import { EmptyState } from '@/components/EmptyState'
+import { ShareEventModal } from '@/components/ShareEventModal'
 import { useEstimate } from '@/hooks/useEstimate'
 import { eventsService } from '@/services/events'
 import { formatBRL } from '@/utils/money'
@@ -34,6 +35,12 @@ export function EventDashboardPage() {
   // Local state for optimistic updates
   const [optimisticPurchased, setOptimisticPurchased] = useState<Set<string>>(new Set())
   const [optimisticPayments, setOptimisticPayments] = useState<Record<string, 'pending' | 'paid'>>({})
+  const [isShareOpen, setIsShareOpen] = useState(false)
+  const [inviteToken, setInviteToken] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (estimate?.event) setInviteToken(estimate.event.inviteToken)
+  }, [estimate?.event])
 
   // Initialize optimistic state when data loads
   useEffect(() => {
@@ -164,16 +171,35 @@ export function EventDashboardPage() {
               </div>
             </div>
 
-            <Button 
-              variant="secondary" 
-              icon="pencil" 
-              className="mt-6 rounded-full"
-              onClick={() => navigate(`/events/${event.id}/items`)}
-            >
-              Editar Festa
-            </Button>
+            <div className="mt-6 flex gap-3">
+              <Button
+                variant="secondary"
+                icon="pencil"
+                className="rounded-full"
+                onClick={() => navigate(`/events/${event.id}/items`)}
+              >
+                Editar Festa
+              </Button>
+              <Button
+                variant="secondary"
+                icon="share"
+                className="rounded-full"
+                onClick={() => setIsShareOpen(true)}
+              >
+                Compartilhar
+              </Button>
+            </div>
           </div>
         </div>
+
+        {isShareOpen && (
+          <ShareEventModal
+            eventId={event.id}
+            inviteToken={inviteToken}
+            onClose={() => setIsShareOpen(false)}
+            onTokenChange={setInviteToken}
+          />
+        )}
 
         <div className="px-5 mt-6 flex flex-col gap-8">
           
@@ -190,8 +216,8 @@ export function EventDashboardPage() {
               {event.pixKey ? (
                 <div className="flex flex-col items-center text-center">
                   <div className="mb-4 flex items-center justify-center rounded-2xl bg-surface-container-highest p-4 shadow-inner">
-                    <QRCodeSVG 
-                      value={generatePixPayload(event.pixKey, perPersonCost, 'Smart Party Organizador')} 
+                    <QRCodeSVG
+                      value={generatePixPayload(event.pixKey, perPersonCost, 'REPARTEAI ORGANIZADOR')}
                       size={140}
                       level="M"
                       className="rounded-lg"

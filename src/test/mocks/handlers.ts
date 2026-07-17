@@ -22,6 +22,7 @@ export const eventSummaryFixture: EventSummary = {
   payments: {},
   purchasedItems: [],
   finalizedAt: null,
+  inviteToken: null,
   estimatedTotal: 254.4,
   createdAt: '2026-07-01T12:00:00.000Z',
   updatedAt: '2026-07-01T12:00:00.000Z',

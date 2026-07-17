@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Icon, type IconName } from '@/components/ui/Icon'
@@ -6,6 +6,7 @@ import { Stepper } from '@/components/Stepper'
 import { useWizard } from '@/contexts/WizardContext'
 import type { Mood, Restrictions } from '@/types/domain'
 import { SubscriptionModal } from '@/components/SubscriptionModal'
+import { MOOD_FILTER_LABELS, MOOD_FILTER_TAGS, type MoodFilterTag } from '@/utils/moods'
 
 interface MoodOption {
   mood: Mood
@@ -75,6 +76,102 @@ const MOOD_OPTIONS: MoodOption[] = [
     description: 'Sanduíches, salgadinhos e docinhos.',
     icon: 'sparkles',
   },
+  {
+    mood: 'new-years',
+    title: 'Ano Novo / Réveillon',
+    description: 'Espumante, ceia e virada da meia-noite.',
+    icon: 'sparkles',
+  },
+  {
+    mood: 'wedding',
+    title: 'Casamento / Noivado',
+    description: 'Canapés, espumante e bolo de casamento.',
+    icon: 'party',
+  },
+  {
+    mood: 'graduation',
+    title: 'Formatura',
+    description: 'Brinde, salgadinhos e comemoração.',
+    icon: 'sparkles',
+  },
+  {
+    mood: 'family-lunch',
+    title: 'Almoço em Família',
+    description: 'Carnes, acompanhamentos e sobremesa.',
+    icon: 'users',
+  },
+  {
+    mood: 'office-party',
+    title: 'Confraternização',
+    description: 'Petiscos, pizza e cerveja com a equipe.',
+    icon: 'users',
+  },
+  {
+    mood: 'rooftop',
+    title: 'Sunset / Terraço',
+    description: 'Drinks, petiscos gourmet e vista.',
+    icon: 'sun',
+  },
+  {
+    mood: 'game-night',
+    title: 'Noite de Jogos',
+    description: 'Pizza, snacks e petiscos rápidos.',
+    icon: 'moon',
+  },
+  {
+    mood: 'picnic',
+    title: 'Piquenique',
+    description: 'Pães, frios, frutas e sucos ao ar livre.',
+    icon: 'sun',
+  },
+  {
+    mood: 'halloween',
+    title: 'Halloween',
+    description: 'Docinhos, salgados temáticos e susto.',
+    icon: 'sparkles',
+  },
+  {
+    mood: 'secret-santa',
+    title: 'Amigo Secreto',
+    description: 'Panetone, espumante e salgadinhos.',
+    icon: 'party',
+  },
+]
+
+const MOODS_WITH_IMAGE = new Set<Mood>([
+  'classic-barbecue',
+  'birthday',
+  'intimate',
+  'large-event',
+  'casual-burger',
+  'happy-hour',
+  'kids-party',
+  'brunch',
+  'pool-party',
+  'baby-shower',
+  'new-years',
+  'wedding',
+  'graduation',
+  'family-lunch',
+  'office-party',
+  'rooftop',
+  'game-night',
+  'picnic',
+  'halloween',
+  'secret-santa',
+])
+
+const FILTER_TAG_ORDER: MoodFilterTag[] = [
+  'bebidas',
+  'carne-nobre',
+  'infantil',
+  'doce',
+  'ao-ar-livre',
+  'intimista',
+  'formal',
+  'corporativo',
+  'sazonal',
+  'economico',
 ]
 
 const EMPTY_RESTRICTIONS: Restrictions = {
@@ -92,9 +189,15 @@ export function MoodStep() {
   const [selected, setSelected] = useState<Mood | null>(null)
   const [name, setName] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [activeFilter, setActiveFilter] = useState<MoodFilterTag | null>(null)
 
   // Only the mood is required; the name is optional and defaults from the mood.
   const canProceed = Boolean(selected)
+
+  const visibleOptions = useMemo(() => {
+    if (!activeFilter) return MOOD_OPTIONS
+    return MOOD_OPTIONS.filter((option) => MOOD_FILTER_TAGS[option.mood].includes(activeFilter))
+  }, [activeFilter])
 
   const handleNext = async () => {
     if (!selected) return
@@ -146,12 +249,54 @@ export function MoodStep() {
         </p>
       </div>
 
+      <div
+        className="relative mb-4 -mx-4"
+        style={{ animation: 'var(--animate-rise)', animationFillMode: 'both', animationDelay: '225ms' }}
+      >
+        <div
+          className="flex gap-2 overflow-x-auto px-4 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          style={{
+            maskImage: 'linear-gradient(to right, transparent, black 16px, black calc(100% - 24px), transparent)',
+            WebkitMaskImage:
+              'linear-gradient(to right, transparent, black 16px, black calc(100% - 24px), transparent)',
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setActiveFilter(null)}
+            className={`shrink-0 cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+              activeFilter === null
+                ? 'border-primary bg-primary text-on-primary'
+                : 'border-outline-variant/40 bg-surface-container-lowest text-on-surface-variant hover:border-primary/50'
+            }`}
+          >
+            Todos
+          </button>
+          {FILTER_TAG_ORDER.map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => setActiveFilter((current) => (current === tag ? null : tag))}
+              className={`shrink-0 cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                activeFilter === tag
+                  ? 'border-primary bg-primary text-on-primary'
+                  : 'border-outline-variant/40 bg-surface-container-lowest text-on-surface-variant hover:border-primary/50'
+              }`}
+            >
+              {MOOD_FILTER_LABELS[tag]}
+            </button>
+          ))}
+          <div className="shrink-0 basis-2" aria-hidden="true" />
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {MOOD_OPTIONS.map((option, index) => {
+        {visibleOptions.map((option, index) => {
           const isSelected = selected === option.mood
           // Image name maps from the mood type e.g. 'classic-barbecue' -> 'mood_classic_barbecue.png'
           const imageFileName = `mood_${option.mood.replace('-', '_')}.png`
-          
+          const hasImage = MOODS_WITH_IMAGE.has(option.mood)
+
           return (
             <button
               key={option.mood}
@@ -165,11 +310,21 @@ export function MoodStep() {
               }`}
             >
               <div className="aspect-[4/3] w-full overflow-hidden bg-surface-container">
-                <img 
-                  src={`/moods/${imageFileName}`} 
-                  alt={option.title} 
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
+                {hasImage ? (
+                  <img
+                    src={`/moods/${imageFileName}`}
+                    alt={option.title}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/15 to-primary/5">
+                    <Icon
+                      name={option.icon}
+                      size={28}
+                      className="text-primary/60 transition-transform duration-700 group-hover:scale-110"
+                    />
+                  </div>
+                )}
               </div>
               <div className={`flex flex-1 flex-col justify-between p-3 transition-colors ${isSelected ? 'bg-primary/5' : 'bg-surface-container-lowest'}`}>
                 <div>

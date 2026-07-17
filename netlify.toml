@@ -39,7 +39,7 @@
     #
     # Clerk (auth): loads its JS and talks to the Frontend API on
     # *.clerk.accounts.dev (test/dev instances) — for a production Clerk instance
-    # on the custom domain, also add https://clerk.churrasok.com.br to script-src
+    # on the custom domain, also add https://clerk.reparteai.com.br to script-src
     # and connect-src. Clerk serves avatars from img.clerk.com, sends telemetry to
     # clerk-telemetry.com, and runs Cloudflare Turnstile (challenges.cloudflare.com)
     # for bot protection, which needs script-src + frame-src. worker-src blob: is

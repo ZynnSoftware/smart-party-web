@@ -88,8 +88,11 @@ export function ShoppingModePage() {
     try {
       if (id) await eventsService.toggleChecklist(id, itemId)
     } catch {
+      // Don't refresh() here: a background refetch failing while offline would
+      // flip the page into the full error state below and also overwrite any
+      // other not-yet-synced optimistic taps. The local check mark stays as-is
+      // and the toast is the only feedback — safe to retry once back online.
       showToast('Sem conexão — tente marcar de novo')
-      void refresh()
     }
   }
 
@@ -101,7 +104,9 @@ export function ShoppingModePage() {
     )
   }
 
-  if (error || !estimate) {
+  // Only block the whole screen when we truly have no data to show — a background
+  // refresh failing after the list already loaded shouldn't wipe out the checklist.
+  if (!estimate) {
     return (
       <div className="mx-auto max-w-2xl px-5 py-16">
         <EmptyState

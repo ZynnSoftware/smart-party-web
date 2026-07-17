@@ -20,7 +20,7 @@ export function SuccessPage() {
         <EmptyState
           illustration="party"
           title="Pagamento Confirmado!"
-          description="Obrigado por adquirir o Smart Party Premium. Aproveite os novos recursos!"
+          description="Obrigado por adquirir o reparteaí Premium. Aproveite os novos recursos!"
           action={
             <Button onClick={() => navigate('/')}>
               Voltar ao Início

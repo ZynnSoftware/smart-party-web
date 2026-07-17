@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { SignedIn, useUser } from '@clerk/clerk-react'
 import { Icon } from '@/components/ui/Icon'
+import { Logo } from '@/components/ui/Logo'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@/contexts/ThemeContext'
 
@@ -12,10 +13,10 @@ export function TopBar() {
 
   return (
     <header className="sticky top-4 z-40 w-full px-4 transition-all duration-300">
-      <div className="mx-auto flex w-full max-w-2xl items-center justify-between rounded-full border border-outline-variant/30 bg-surface-container-lowest/70 px-5 py-2.5 shadow-[var(--shadow-card)] backdrop-blur-xl dark:border-white/10 dark:bg-surface-container-lowest/30">
+      <div className="mx-auto flex w-full max-w-5xl items-center justify-between rounded-2xl border border-outline-variant/30 bg-surface-container-lowest/70 px-5 py-2.5 shadow-[var(--shadow-card)] backdrop-blur-xl dark:border-white/10 dark:bg-surface-container-lowest/30">
         <Link to="/" className="group flex items-center gap-2.5 transition-opacity hover:opacity-80">
-          <Icon name="party" size={22} className="text-primary transition-transform duration-300 group-hover:scale-110" />
-          <span className="text-lg font-medium tracking-tight text-on-surface">Smart Party</span>
+          <Logo size={22} className="transition-transform duration-300 group-hover:scale-110" />
+          <span className="font-display text-lg font-bold tracking-tight text-on-surface">reparteaí</span>
         </Link>
 
         <div className="flex items-center gap-2">

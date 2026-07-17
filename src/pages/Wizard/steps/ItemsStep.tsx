@@ -109,14 +109,14 @@ export function ItemsStep() {
         />
       </div>
 
-      {/* Floating action to add an extra item / review notes */}
+      {/* Floating action to add an extra item / review notes — a supporting action,
+          so it stays visually lighter than the primary "Orçamento e Divisão" CTA below. */}
       <button
         onClick={() => setIsMenuOpen(true)}
-        className="fixed bottom-24 right-5 sm:bottom-28 sm:right-10 z-40 flex items-center gap-2 rounded-full bg-primary py-3.5 pl-4 pr-5 text-sm font-semibold text-on-primary shadow-[var(--shadow-floating)] transition-transform hover:scale-105 active:scale-95"
+        className="fixed bottom-24 right-5 sm:bottom-28 sm:right-10 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-primary/40 bg-surface-container-lowest text-primary shadow-[var(--shadow-card)] transition-transform hover:scale-105 hover:border-primary hover:shadow-[var(--shadow-floating)] active:scale-95"
         aria-label="Adicionar item ou ver considerações"
       >
-        <Icon name="plus" size={20} />
-        Adicionar item
+        <Icon name="plus" size={22} />
       </button>
 
       {/* Modal for Extras & Notes */}
@@ -159,14 +159,27 @@ export function ItemsStep() {
                     inputMode="numeric"
                     className="w-full border-b-2 border-outline-variant/30 bg-transparent px-2 py-3 text-lg font-medium text-on-surface outline-none transition focus:border-primary placeholder:text-on-surface-variant/40"
                   />
-                  <Button
-                    className="mt-4 w-full rounded-full transition-transform active:scale-95"
-                    icon="plus"
-                    onClick={handleAddCustom}
-                    disabled={!newCustomName.trim() || justAdded}
-                  >
-                    {justAdded ? 'Adicionado com sucesso!' : 'Incluir na Lista'}
-                  </Button>
+                  <div className="mt-4 flex items-center gap-3">
+                    <Button
+                      variant="ghost"
+                      className="rounded-full transition-transform active:scale-95"
+                      onClick={() => {
+                        setNewCustomName('')
+                        setNewCustomPrice('')
+                      }}
+                      disabled={justAdded}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      className="flex-1 rounded-full transition-transform active:scale-95"
+                      icon="plus"
+                      onClick={handleAddCustom}
+                      disabled={!newCustomName.trim() || justAdded}
+                    >
+                      {justAdded ? 'Adicionado com sucesso!' : 'Incluir na Lista'}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

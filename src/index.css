@@ -1,8 +1,9 @@
 @import 'tailwindcss';
 
-/* Social Hearth design system — see prototype social_hearth/DESIGN.md */
+/* reparteaí design system — brand guide: smart-party-brand-guide.html */
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
 
   --color-surface: #f8f9fa;
   --color-surface-container: #edeeef;
@@ -16,15 +17,21 @@
 
   --color-primary: #b3290f;
   --color-on-primary: #ffffff;
-  --color-primary-container: #ff5f40;
-  --color-primary-fixed: #ffdad3;
+  --color-primary-container: #e85d3d;
+  --color-primary-fixed: #fbe4dc;
 
   --color-secondary: #5f5e5e;
   --color-on-secondary: #ffffff;
 
-  --color-tertiary: #006d36;
+  --color-tertiary: #3a8351;
   --color-on-tertiary: #ffffff;
   --color-tertiary-container: #00ab58;
+
+  --color-amber: #f2a93b;
+  --color-on-amber: #1c1512;
+
+  --color-pix: #0f9c8e;
+  --color-on-pix: #ffffff;
 
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
@@ -73,6 +80,12 @@
   --color-tertiary: #4de082;
   --color-on-tertiary: #003517;
   --color-tertiary-container: #00753b;
+
+  --color-amber: #f2a93b;
+  --color-on-amber: #1c1512;
+
+  --color-pix: #1ec2b1;
+  --color-on-pix: #04211d;
 
   --color-error: #ffb4ab;
   --color-on-error: #690005;

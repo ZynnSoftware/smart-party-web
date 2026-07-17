@@ -1,5 +1,5 @@
 import { api } from './api'
-import type { Event, EventEstimate, EventSummary } from '@/types/domain'
+import type { Event, EventCollaborator, EventEstimate, EventSummary } from '@/types/domain'
 
 export interface CreateEventPayload {
   name: string
@@ -73,6 +73,25 @@ async function togglePayment(id: string, payerName: string): Promise<Event> {
   return data
 }
 
+async function regenerateInviteToken(id: string): Promise<Event> {
+  const { data } = await api.post<Event>(`/events/${id}/invite-token`)
+  return data
+}
+
+async function listCollaborators(id: string): Promise<EventCollaborator[]> {
+  const { data } = await api.get<EventCollaborator[]>(`/events/${id}/collaborators`)
+  return data
+}
+
+async function removeCollaborator(id: string, collaboratorId: string): Promise<void> {
+  await api.delete(`/events/${id}/collaborators/${collaboratorId}`)
+}
+
+async function acceptInvite(id: string, token: string): Promise<Event> {
+  const { data } = await api.post<Event>(`/events/${id}/join`, { token })
+  return data
+}
+
 export const eventsService = {
   create,
   update,
@@ -83,4 +102,8 @@ export const eventsService = {
   finalize,
   toggleChecklist,
   togglePayment,
+  regenerateInviteToken,
+  listCollaborators,
+  removeCollaborator,
+  acceptInvite,
 }

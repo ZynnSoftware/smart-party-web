@@ -2,6 +2,7 @@ import { SignInButton } from '@clerk/clerk-react'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
+import { Logo } from '@/components/ui/Logo'
 import { moodImage, moodLabel } from '@/utils/moods'
 
 const STEPS = [
@@ -267,8 +268,8 @@ export function SignedOutLanding() {
         {/* ─── Rodapé ─── */}
         <footer className="flex flex-col items-center gap-2 border-t border-outline-variant/20 py-8 text-center">
           <div className="flex items-center gap-2">
-            <Icon name="party" size={18} className="text-primary" />
-            <span className="font-bold tracking-tight text-on-surface">Smart Party</span>
+            <Logo size={18} />
+            <span className="font-display font-bold tracking-tight text-on-surface">reparteaí</span>
           </div>
           <p className="text-xs font-medium text-on-surface-variant/70">
             Planeje, calcule e divida — sem dor de cabeça.

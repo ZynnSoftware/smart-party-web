@@ -3,7 +3,7 @@
  * Note: This is a simplified generator that assumes standard keys (phone, email, CPF, random).
  * It does not support dynamic QRCodes or complex metadata, which is sufficient for simple split payments.
  */
-export function generatePixPayload(key: string, amount: number, merchantName: string = 'Smart Party', city: string = 'Brasil'): string {
+export function generatePixPayload(key: string, amount: number, merchantName: string = 'REPARTEAI', city: string = 'Brasil'): string {
   // Format amount to 2 decimal places with dot
   const formattedAmount = amount.toFixed(2)
 
