@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
+import { HelmetProvider } from 'react-helmet-async'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { http, HttpResponse } from 'msw'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -11,13 +12,15 @@ const ROUTE = '/events/evt-1/join?token=valid-token'
 
 function renderJoinPage() {
   return render(
-    <ThemeProvider>
-      <MemoryRouter initialEntries={[ROUTE]}>
-        <Routes>
-          <Route path="/events/:id/join" element={<JoinEventPage />} />
-        </Routes>
-      </MemoryRouter>
-    </ThemeProvider>,
+    <HelmetProvider>
+      <ThemeProvider>
+        <MemoryRouter initialEntries={[ROUTE]}>
+          <Routes>
+            <Route path="/events/:id/join" element={<JoinEventPage />} />
+          </Routes>
+        </MemoryRouter>
+      </ThemeProvider>
+    </HelmetProvider>,
   )
 }
 

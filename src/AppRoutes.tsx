@@ -1,5 +1,6 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { EventsListPage } from '@/pages/Events/EventsListPage'
+import { NotFoundPage } from '@/pages/NotFound/NotFoundPage'
 import { WizardLayout } from '@/pages/Wizard/WizardLayout'
 import { MoodStep } from '@/pages/Wizard/steps/MoodStep'
 import { GuestsStep } from '@/pages/Wizard/steps/GuestsStep'
@@ -12,6 +13,23 @@ import { CancelPage } from '@/pages/Cancel'
 import { ProfilePage } from '@/pages/Profile/ProfilePage'
 import { EventDashboardPage } from '@/pages/Dashboard/EventDashboardPage'
 import { ShoppingModePage } from '@/pages/Shopping/ShoppingModePage'
+
+/** Every path AppRoutes renders behind the auth gate — used to detect unmapped
+ * URLs before RequireAuth runs, so a bad link 404s instead of showing the landing. */
+export const APP_ROUTE_PATHS = [
+  '/',
+  '/profile',
+  '/success',
+  '/cancel',
+  '/events/:id/dashboard',
+  '/events/:id/shopping',
+  '/new',
+  '/events/:id/guests',
+  '/events/:id/notes',
+  '/events/:id/items',
+  '/events/:id/budget',
+  '/events/:id/split',
+]
 
 export function AppRoutes() {
   return (
@@ -30,7 +48,7 @@ export function AppRoutes() {
         <Route path="/events/:id/budget" element={<BudgetStep />} />
         <Route path="/events/:id/split" element={<SplitStep />} />
       </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }
