@@ -1,4 +1,5 @@
 import { SignInButton } from '@clerk/clerk-react'
+import { Link } from 'react-router-dom'
 import { Seo } from '@/components/Seo'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/Button'
@@ -349,6 +350,12 @@ export function SignedOutLanding() {
           <p className="text-xs font-medium text-on-surface-variant/70">
             Planeje, calcule e divida — sem dor de cabeça.
           </p>
+          <Link
+            to="/receitas"
+            className="text-xs font-bold text-primary hover:underline"
+          >
+            Ver receitas por tipo de festa
+          </Link>
         </footer>
       </main>
     </div>

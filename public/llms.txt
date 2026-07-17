@@ -11,5 +11,6 @@
 - Idioma: português (Brasil)
 - Primeiro evento é gratuito, sem cartão de crédito.
 - Divisão de custos entre convidados é feita via Pix.
-- O produto é majoritariamente usado após login (área logada); a página pública
-  principal é a home (https://www.reparteai.com.br/).
+- O produto é majoritariamente usado após login (área logada); as páginas públicas
+  são a home (https://www.reparteai.com.br/) e as receitas por tipo de festa
+  (https://www.reparteai.com.br/receitas), com quantidades pensadas para grupos.
