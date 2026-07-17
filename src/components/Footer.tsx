@@ -11,9 +11,6 @@ export function Footer() {
       <p className="text-xs font-medium text-on-surface-variant/70">
         Planeje, calcule e divida — sem dor de cabeça.
       </p>
-      <Link to="/receitas" className="text-xs font-bold text-primary hover:underline">
-        Ver receitas por tipo de festa
-      </Link>
       <div className="mt-1 flex items-center gap-3 text-xs font-medium text-on-surface-variant/70">
         <Link to="/termos" className="hover:underline hover:text-on-surface-variant">
           Termos de Uso
