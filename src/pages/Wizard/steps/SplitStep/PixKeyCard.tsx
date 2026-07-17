@@ -3,7 +3,7 @@ import { Icon } from '@/components/ui/Icon'
 interface PixKeyCardProps {
   pixKey: string
   onChange: (value: string) => void
-  onSave: () => void
+  onSave: (value: string) => void
 }
 
 export function PixKeyCard({ pixKey, onChange, onSave }: PixKeyCardProps) {
@@ -17,7 +17,7 @@ export function PixKeyCard({ pixKey, onChange, onSave }: PixKeyCardProps) {
         <input
           value={pixKey}
           onChange={(e) => onChange(e.target.value)}
-          onBlur={onSave}
+          onBlur={() => onSave(pixKey)}
           placeholder="CPF, e-mail ou telefone"
           className="w-full min-w-0 bg-transparent pb-2 text-lg font-bold tracking-tight text-on-surface outline-none transition-all placeholder:text-on-surface-variant/30 focus:text-primary"
         />

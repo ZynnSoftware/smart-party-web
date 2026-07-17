@@ -191,7 +191,7 @@ export function SplitStep() {
       </div>
       
       <PixKeyCard pixKey={pixKey} onChange={setPixKey} onSave={(key) => {
-        savePixKey(key)
+        savePixKey()
         pushEvent('pix_key_saved', { key_type: key.includes('@') ? 'email' : key.length === 11 ? 'cpf/phone' : 'other' })
       }} />
 
