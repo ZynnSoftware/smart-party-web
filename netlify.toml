@@ -44,4 +44,11 @@
     # clerk-telemetry.com, and runs Cloudflare Turnstile (challenges.cloudflare.com)
     # for bot protection, which needs script-src + frame-src. worker-src blob: is
     # for Clerk's web worker.
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://*.clerk.accounts.dev https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://img.clerk.com; font-src 'self' data:; connect-src 'self' https://*.clerk.accounts.dev https://clerk-telemetry.com; worker-src 'self' blob:; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    #
+    # Google Tag Manager (GTM-TSQK8K3Q, wired in index.html): the inline bootstrap
+    # snippet needs 'unsafe-inline' on script-src (GTM has no nonce/hash support
+    # here since it's a static Netlify header, not server-rendered); its loader
+    # script comes from googletagmanager.com, which then injects GA4 (Google
+    # Analytics) tags that report to google-analytics.com / analytics.google.com;
+    # the noscript fallback iframe needs frame-src on googletagmanager.com.
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://challenges.cloudflare.com https://www.googletagmanager.com https://*.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://img.clerk.com https://www.googletagmanager.com https://*.google-analytics.com; font-src 'self' data:; connect-src 'self' https://*.clerk.accounts.dev https://clerk-telemetry.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; worker-src 'self' blob:; frame-src https://challenges.cloudflare.com https://www.googletagmanager.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
