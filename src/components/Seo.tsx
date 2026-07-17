@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-const SITE_URL = 'https://reparteai.com.br'
+const SITE_URL = 'https://www.reparteai.com.br'
 const DEFAULT_IMAGE = `${SITE_URL}/moods/mood_classic_barbecue.png`
 
 type SeoProps = {

@@ -10,10 +10,10 @@ const ORGANIZATION_JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'reparteaí',
-  url: 'https://reparteai.com.br',
+  url: 'https://www.reparteai.com.br',
   description:
     'Planejador de festas com IA: lista de compras automática, orçamento inteligente e divisão da conta no Pix.',
-  logo: 'https://reparteai.com.br/favicon.svg',
+  logo: 'https://www.reparteai.com.br/favicon.svg',
 }
 
 const STEPS = [
